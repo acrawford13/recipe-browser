@@ -16,9 +16,9 @@ const recipeBrowser = (props) => {
 
     if (props.searchTerm) {
         if (filteredRecipes.length > 0) {
-            searchMessage = <p>Recipes with ingredients containing <strong>'{props.searchTerm}'</strong></p>;
+            searchMessage = <p className="search-message">Recipes with ingredients containing <strong>'{props.searchTerm}'</strong></p>;
         } else {
-            searchMessage = <p>No results found</p>;            
+            searchMessage = <p className="search-message search-message--no-results">No results found</p>;            
         }
     }
 

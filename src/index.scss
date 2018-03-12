@@ -9,6 +9,22 @@ $nectarine: #ffc107;
     font-family: 'Domine', serif;
 }
 
+button,
+.button {
+    border-radius: 0.25rem;
+    background-color: #ddd;
+    color: #212121;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    cursor: pointer;
+
+    &.alert {
+        background-color: orange;
+        color: white;
+    }
+}
+
 .top-bar {
     background-color: $nectarine;
     padding: 0.5rem;
@@ -25,12 +41,23 @@ $nectarine: #ffc107;
 
 .page-nav-bar {
     background-color: #eee;
-    padding: 1rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     a {
         padding: 0.5rem;
         text-decoration: none;
         color: #212121;
+    }
+}
+
+.search-message {
+    text-align: center;
+    
+    &--no-results {
+        color: #9b9b9b;
     }
 }
 

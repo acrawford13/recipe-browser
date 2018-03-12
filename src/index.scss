@@ -81,6 +81,8 @@ $recipe-image-height: 80px;
     cursor: pointer;
     transition: transform 0.3s;
     width: 100%;
+    text-decoration: none;
+    color: #212121;
 
     &:hover {
         transform: scale(1.02);

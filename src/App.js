@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import Layout from './components/Layout/Layout';
+import RecipeBrowser from './components/RecipeBrowser/RecipeBrowser';
+import RecipeView from './components/RecipeView/RecipeView';
 
 class App extends Component {
     state = {
@@ -210,8 +213,15 @@ class App extends Component {
 
     render() {
         return (
-            <Layout>
-            </Layout>
+            <BrowserRouter>
+                <Layout>
+                    <Route path="/" exact render={() => (<RecipeBrowser recipes={this.state.recipes} />)} />
+                    <Route path="/recipes/:id" exact render={(props) => {
+                        const recipe = this.state.recipes.find(recipe => recipe.id === +props.match.params.id);
+                        return <RecipeView recipe={recipe} />
+                    }} />
+                </Layout>
+            </BrowserRouter>
         );
     }
 }

@@ -7,6 +7,7 @@ import RecipeView from './components/RecipeView/RecipeView';
 
 class App extends Component {
     state = {
+        searchTerm: '',
         recipes: [
             {
                 "description": "This buffet classic can also be healthy! Mayonnaise is replaced by cottage cheese. You can blend the filling for more creaminess.",
@@ -211,11 +212,21 @@ class App extends Component {
         ]
     }
 
+    onSearchTermUpdated = (e) => {
+        this.setState({searchTerm: e.target.value});
+    }
+
     render() {
         return (
             <BrowserRouter>
                 <Layout>
-                    <Route path="/" exact render={() => (<RecipeBrowser recipes={this.state.recipes} />)} />
+                    <Route path="/" exact render={() => (
+                        <RecipeBrowser
+                            recipes={this.state.recipes}
+                            searchTerm={this.state.searchTerm}
+                            onSearchTermUpdated={this.onSearchTermUpdated}
+                            />
+                    )} />
                     <Route path="/recipes/:id" exact render={(props) => {
                         const recipe = this.state.recipes.find(recipe => recipe.id === +props.match.params.id);
                         return <RecipeView recipe={recipe} />

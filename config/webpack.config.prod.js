@@ -154,6 +154,7 @@ module.exports = {
             },
           },
           // The notation here is somewhat confusing.
+          // "sass" loader compiles SCSS to CSS
           // "postcss" loader applies autoprefixer to our CSS.
           // "css" loader resolves paths in CSS and adds assets as dependencies.
           // "style" loader normally turns CSS into JS modules injecting <style>,
@@ -166,7 +167,7 @@ module.exports = {
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
           {
-            test: /\.css$/,
+            test: /\.s?css$/,
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
@@ -180,7 +181,7 @@ module.exports = {
                     {
                       loader: require.resolve('css-loader'),
                       options: {
-                        importLoaders: 1,
+                        importLoaders: 2,
                         minimize: true,
                         sourceMap: shouldUseSourceMap,
                       },
@@ -205,6 +206,9 @@ module.exports = {
                         ],
                       },
                     },
+                    {
+                      loader: require.resolve('sass-loader')
+                    }
                   ],
                 },
                 extractTextPluginOptions

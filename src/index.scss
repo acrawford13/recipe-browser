@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css?family=Domine:400,700');
+
+
+// colors
+$medium-grey: #bbb;
+$nectarine: #ffc107;
+
+* {
+    font-family: 'Domine', serif;
+}
+
+.top-bar {
+    background-color: $nectarine;
+    padding: 0.5rem;
+    text-align: center;
+
+    &__title {
+        color: #212121;
+        font-weight: bold;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1rem;
+    }
+}
+
+.page-nav-bar {
+    background-color: #eee;
+    padding: 1rem;
+
+    a {
+        padding: 0.5rem;
+        text-decoration: none;
+        color: #212121;
+    }
+}
+
+.search-container {
+    text-align: center;
+    padding: 1rem;
+    background-color: #eee;
+
+    &__input {
+        border-radius: 0.25rem;
+        border: 0.5px solid grey;
+        padding: 0.5rem;
+    }
+}
+
+.main-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+// recipes component
+.recipe-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+// recipe component
+// recipe item variables
+$recipe-border: 1px solid $medium-grey;
+$recipe-shadow: 0 2px 3px rgba(0,0,0,0.25);
+$recipe-border-radius: 0.25rem;
+$recipe-image-height: 80px;
+
+.recipe-list-item {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: $recipe-border;
+    box-shadow: $recipe-shadow;
+    border-radius: $recipe-border-radius;
+    overflow: hidden;
+    margin: 0.25rem 0;
+    cursor: pointer;
+    transition: transform 0.3s;
+    width: 100%;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: normal;
+    }
+
+    &__text {
+        padding: 1rem;
+    }
+
+    &__ingredients {
+        color: #444;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+
+        strong {
+            color: orange;
+        }
+    }
+
+    &__image {
+        display: inline-block;
+        min-height: $recipe-image-height;
+        width: $recipe-image-height;
+        background-size: cover;
+        align-self: stretch;
+        background-position: center;
+    }
+}
+
+.recipe-detail {
+    border: $recipe-border;
+    box-shadow: $recipe-shadow;
+    border-radius: $recipe-border-radius;
+    margin: 1rem auto;
+    overflow: hidden;
+
+    &__title {
+        margin: 0;
+        background-color: $nectarine;
+        // background-color: #eee;
+        color: #212121;
+        padding: 1.25rem;
+        border-bottom: 1px solid $medium-grey;
+    }
+
+    &__content {
+        padding: 1.25rem;
+        padding-top: 0;
+    }
+
+    &__description {
+        color: #666;
+        font-size: 1.2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid $medium-grey;
+    }
+
+    &__image {
+        max-width: 100%;
+
+        @media screen and (min-width: 480px) {
+            float: right;
+            max-width: calc(50% - 1rem);
+            margin-left: 1rem;
+        }
+    }
+
+    &__subtitle {
+        color: #666;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+}

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Input from '../../Input/Input';
 
-const seasoningsFormSection = (props) => {
+const multiInput = (props) => {
     const defaultFields = [];
     for (let key in props.fields.defaultFields) {
         defaultFields.push({
@@ -23,16 +23,15 @@ const seasoningsFormSection = (props) => {
 
     return (
         <div>
-            <h4>Seasonings</h4>
+            <h4>seasonings</h4>
             <div className="seasonings-grid">
             {/* existing fields */}
             {existingfields.map(fieldGroup => (
                 <div className="seasonings-form-row">{fieldGroup.arrayFields.map(field => (<Input
-                    type={field.type}
-                    placeholder={field.placeholder}
+                    type="text"
                     changed={(e) => {props.onEditHandler(e, fieldGroup.id, field.id, 'seasonings')}}
                     value={field.value} />))}
-                    <span className="button" onClick={(e) => {props.removeField(e, fieldGroup.id, 'seasonings')}}>-</span></div>
+                    <button onClick={(e) => {props.removeField(e, fieldGroup.id, 'seasonings')}}>-</button></div>
             ))}
             {/* new field */}
             <div className="seasonings-form-row">
@@ -44,11 +43,11 @@ const seasoningsFormSection = (props) => {
                     field={field.value}
                     value={field.value} />
             ))}
-            <span className="button" onClick={(e) => props.addField(e, 'seasonings')}>+</span>
+            <input type="submit" onClick={props.addField} value="+" />
             </div>
             </div>
         </div>
     )
 }
  
-export default seasoningsFormSection;
+export default multiInput;

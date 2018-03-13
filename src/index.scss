@@ -60,8 +60,21 @@ button,
     }
 }
 
-.ingredients-form-row {
+.form-row {
     display: flex;
+    padding: 0.25rem;
+
+    &:nth-child(2n){
+        background-color: #eee;
+    }
+
+    input {
+        min-width: 0;
+        flex: auto;
+        border: none;
+        background-color: transparent;
+        padding: 0.25rem;
+    }
 }
 
 .search-message {

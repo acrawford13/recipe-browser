@@ -18,6 +18,8 @@ button,
     padding: 0.5rem 0.75rem;
     outline: none;
     cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
 
     &.alert {
         background-color: orange;
@@ -40,11 +42,16 @@ button,
 }
 
 .page-nav-bar {
-    background-color: #eee;
     padding: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+    
+    &__wrapper {
+        background-color: #eee;
+    }
 
     a {
         padding: 0.5rem;
@@ -54,23 +61,30 @@ button,
 }
 
 .search-message {
-    text-align: center;
-    
     &--no-results {
+        text-align: center;
         color: #9b9b9b;
     }
 }
 
 .search-container {
-    text-align: center;
     padding: 1rem;
     background-color: #eee;
+    display: flex;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 0 auto;
+
+    &__wrapper {
+        background-color: #eee;
+    }
 
     &__input {
         border-radius: 0.25rem;
         border: 0.5px solid grey;
         padding: 0.5rem;
         outline: none;
+        margin-right: 1rem;
     }
 }
 

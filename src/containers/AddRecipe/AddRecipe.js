@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 
 import Input from '../../components/UI/Forms/Input/Input';
 import IngredientsFormSection from '../../components/UI/Forms/Sections/IngredientsFormSection/IngredientsFormSection';
@@ -165,7 +166,7 @@ class addRecipe extends Component {
         })
     }
 
-    addInputHandler = (e, sectionId) => {
+    addInputHandlers = (e, sectionId) => {
         e.preventDefault();
         // store reference to section
         const section = this.state.form.sections[sectionId];
@@ -195,6 +196,37 @@ class addRecipe extends Component {
             }
         })
     }
+    
+
+    addInputHandler = (e, sectionId) => {
+        e.preventDefault();
+
+        const section = this.state.form.sections[sectionId];
+        const valuesToCopy = {};
+        const defaultValues = {};
+
+        for (let key in section.defaultFields){
+            valuesToCopy[key] = {value: section.defaultFields[key].value};
+            defaultValues[key] = update(section.defaultFields[key], {$set: {value: ''}});
+        }
+
+        this.setState({
+            form: update(this.state.form, {
+                sections: {
+                    [sectionId]: {
+                        fields: {
+                            $merge: {
+                                [sectionId + new Date().getTime()]: valuesToCopy,
+                            }
+                        },
+                        defaultFields: {
+                            $set: defaultValues
+                        }
+                    }
+                }
+            })
+        });
+    }
 
     removeInputHandler = (e, id, sectionId) =>{
         e.preventDefault();
@@ -203,68 +235,53 @@ class addRecipe extends Component {
         delete updatedFields[id];
 
         this.setState({
-            form: {
-                ...this.state.form,
+            form: update(this.state.form, {
                 sections: {
-                    ...this.state.form.sections,
                     [sectionId]: {
-                        ...section,
-                        fields: updatedFields,
+                        fields: {
+                            $set: updatedFields
+                        }
                     }
                 }
-            }
+            })
         });
     }
     
     editExistingInputHandler = (e, id, id2, sectionId) => {
-        const section = this.state.form.sections[sectionId];
         this.setState({
-            form: {
-                ...this.state.form,
+            form: update(this.state.form, {
                 sections: {
-                    ...this.state.form.sections,
                     [sectionId]: {
-                        ...section,
                         fields: {
-                            ...section.fields,
                             [id]: {
-                                ...section.fields[id],
                                 [id2]: {
-                                    ...section.fields[id2],
-                                    value: e.target.value,
+                                    value: {$set: e.target.value}
                                 }
                             }
-                        },
+                        }
                     }
                 }
-            }
+            })
         })
     }
     
     editActiveInputHandler = (e, field, sectionId) => {
-        console.log(field);
-        const section = this.state.form.sections[sectionId];
         this.setState({
-            form: {
-                ...this.state.form,
+            form: update(this.state.form, {
                 sections: {
-                    ...this.state.form.sections,
                     [sectionId]: {
-                        ...section,
                         defaultFields: {
-                            ...section.defaultFields,
                             [field]: {
-                                ...section.defaultFields[field],
-                                value: e.target.value,
+                                value: {$set: e.target.value}
                             }
-                        },
+                        }
                     }
                 }
-            }
+            })
         })
     }
 
-    render() { 
+    render() {
         const formData = [];
         for (let fieldName in this.state.fields) {
             formData.push({
@@ -292,7 +309,7 @@ class addRecipe extends Component {
                         removeField={this.removeInputHandler}
                         fields={this.state.form.sections.ingredients} />
                     <SeasoningsFormSection
-                        onChangeHandler={(e) => {this.editActiveInputHandler(e, 'seasonings')}}
+                        onChangeHandler={this.editActiveInputHandler}
                         onEditHandler={this.editExistingInputHandler}
                         addField={(e) => {this.addInputHandler(e, 'seasonings')}}
                         removeField={this.removeInputHandler}

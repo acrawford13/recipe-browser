@@ -37,6 +37,7 @@ const ingredientsFormSection = (props) => {
             <div className="ingredients-form-row">
             {defaultFields.map(field => (
                 <Input
+                    key={field.id}
                     changed={(e) => {props.onChangeHandler(e, field.id, 'ingredients')}}
                     placeholder={field.placeholder}
                     field={field.value}

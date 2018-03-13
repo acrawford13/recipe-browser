@@ -3,38 +3,49 @@ import React from 'react';
 import Input from '../../Input/Input';
 
 const seasoningsFormSection = (props) => {
-    const activeFields = [];
-    for (let key in props.fields.activeFields) {
-        activeFields.push({
-            ...props.fields.activeFields[key]
-        })
-    }
-    const fields = [];
-    for (let key in props.fields.fields) {
-        fields.push({
-            ...props.fields.fields[key],
+    const defaultFields = [];
+    for (let key in props.fields.defaultFields) {
+        defaultFields.push({
+            ...props.fields.defaultFields[key],
             id: key,
-        })
+        });
     }
+    const existingfields = [];
+    for (let key in props.fields.fields) {
+        existingfields.push({
+            fields: {...props.fields.fields[key]},
+            arrayFields: Object.keys(props.fields.fields[key]).map(
+                item => ({...props.fields.fields[key][item], id: item}),
+            ),
+            id: key,
+        });
+    }
+
     return (
         <div>
-            <h4>Seasonings</h4>
+            <h4>seasonings</h4>
+            <div className="seasonings-grid">
             {/* existing fields */}
-            {fields.map(field => (
-                <div><Input
+            {existingfields.map(fieldGroup => (
+                <div className="seasonings-form-row">{fieldGroup.arrayFields.map(field => (<Input
                     type="text"
-                    changed={(e) => {props.onEditHandler(e, field.id, 'seasonings')}}
-                    value={field.value} />
-                    <button onClick={(e) => {props.removeField(e, field.id, 'seasonings')}}>-</button></div>
+                    changed={(e) => {props.onEditHandler(e, fieldGroup.id, field.id, 'seasonings')}}
+                    value={field.value} />))}
+                    <button onClick={(e) => {props.removeField(e, fieldGroup.id, 'seasonings')}}>-</button></div>
             ))}
             {/* new field */}
-            {activeFields.map(field => (
+            <div className="seasonings-form-row">
+            {defaultFields.map(field => (
                 <Input
-                    changed={props.onChangeHandler}
+                    key={field.id}
+                    changed={(e) => {props.onChangeHandler(e, field.id, 'seasonings')}}
                     placeholder={field.placeholder}
-                    field={field.value} />
+                    field={field.value}
+                    value={field.value} />
             ))}
-            <button onClick={props.addField}>+</button>
+            <input type="submit" onClick={props.addField} value="+" />
+            </div>
+            </div>
         </div>
     )
 }

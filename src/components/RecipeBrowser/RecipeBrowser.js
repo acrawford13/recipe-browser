@@ -8,7 +8,7 @@ const recipeBrowser = (props) => {
         .filter(recipe => {
             return recipe.ingredients
                 .filter(ingredient => {
-                    return ingredient.name.match(new RegExp(props.searchTerm, 'i'))
+                    return ingredient.name.toLowerCase().indexOf(props.searchTerm.toLowerCase()) !== -1;
                 }).length > 0
             });
 

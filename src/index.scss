@@ -60,6 +60,10 @@ button,
     }
 }
 
+.ingredients-form-row {
+    display: flex;
+}
+
 .search-message {
     &--no-results {
         text-align: center;

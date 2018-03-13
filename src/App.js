@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Layout from './components/Layout/Layout';
 import RecipeBrowser from './components/RecipeBrowser/RecipeBrowser';
@@ -220,6 +220,12 @@ class App extends Component {
         return (
             <BrowserRouter>
                 <Layout>
+                    <Switch>
+                    <Route path="/recipes/add" exact render={() => (<h1>Add recipe</h1>)} />
+                    <Route path="/recipes/:id" exact render={(props) => {
+                        const recipe = this.state.recipes.find(recipe => recipe.id === +props.match.params.id);
+                        return <RecipeView recipe={recipe} />
+                    }} />
                     <Route path="/" exact render={() => (
                         <RecipeBrowser
                             recipes={this.state.recipes}
@@ -227,10 +233,7 @@ class App extends Component {
                             onSearchTermUpdated={this.onSearchTermUpdated}
                             />
                     )} />
-                    <Route path="/recipes/:id" exact render={(props) => {
-                        const recipe = this.state.recipes.find(recipe => recipe.id === +props.match.params.id);
-                        return <RecipeView recipe={recipe} />
-                    }} />
+                    </Switch>
                 </Layout>
             </BrowserRouter>
         );

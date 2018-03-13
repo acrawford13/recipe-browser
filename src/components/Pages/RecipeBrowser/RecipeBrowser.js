@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import RecipeList from './RecipeList/RecipeList';
-import SearchBar from '../Navigation/SearchBar/SearchBar';
+import SearchBar from '../../Navigation/SearchBar/SearchBar';
 
 const recipeBrowser = (props) => {
     const filteredRecipes = props.recipes

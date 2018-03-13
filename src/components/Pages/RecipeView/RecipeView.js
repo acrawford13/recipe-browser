@@ -1,6 +1,6 @@
 import React from 'react';
 
-import NavigationBar from '../Navigation/NavigationBar/NavigationBar';
+import NavigationBar from '../../Navigation/NavigationBar/NavigationBar';
 
 const formatIngredient = (ingredient) => {
     if (['g','kg'].indexOf(ingredient.unit) === -1){

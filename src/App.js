@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Layout from './components/Layout/Layout';
-import RecipeBrowser from './components/RecipeBrowser/RecipeBrowser';
-import RecipeView from './components/RecipeView/RecipeView';
+import RecipeBrowser from './components/Pages/RecipeBrowser/RecipeBrowser';
+import RecipeView from './components/Pages/RecipeView/RecipeView';
+import AddRecipe from './containers/AddRecipe/AddRecipe';
 
 class App extends Component {
     state = {
@@ -221,7 +222,7 @@ class App extends Component {
             <BrowserRouter>
                 <Layout>
                     <Switch>
-                    <Route path="/recipes/add" exact render={() => (<h1>Add recipe</h1>)} />
+                    <Route path="/recipes/add" exact render={() => (<AddRecipe />)} />
                     <Route path="/recipes/:id" exact render={(props) => {
                         const recipe = this.state.recipes.find(recipe => recipe.id === +props.match.params.id);
                         return <RecipeView recipe={recipe} />

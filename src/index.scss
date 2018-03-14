@@ -60,20 +60,47 @@ button,
     }
 }
 
-.form-row {
-    display: flex;
-    padding: 0.25rem;
-
-    &:nth-child(2n){
-        background-color: #eee;
+.form {
+    label {
+        font-size: 0.75rem;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
     }
 
     input {
         min-width: 0;
         flex: auto;
-        border: none;
         background-color: transparent;
+        margin-bottom: 1rem;
+        width: 100%;
+        border: 0.5px solid #ccc;
         padding: 0.25rem;
+    }
+
+    .input-row {
+        display: flex;
+    }
+
+    .multiInput-row {
+        display: flex;
+        padding: 0.25rem;
+
+        &:not(.multiInput-row--active):nth-child(2n){
+            background-color: lighten($nectarine, 35);
+        }
+
+        &--active {
+            background-color: #fff;
+            border: 0.5px solid #aaa;
+        }
+
+        input {
+            margin: 0;
+            border: none;
+            padding: 0.25rem;
+            margin-right: 0.25rem;
+        }
     }
 }
 

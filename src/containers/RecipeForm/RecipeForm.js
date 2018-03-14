@@ -2,22 +2,33 @@ import React, { Component } from 'react';
 import update from 'immutability-helper';
 
 import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
-import SeasoningsFormSection from '../../components/UI/Forms/Sections/SeasoningsFormSection/SeasoningsFormSection';
+import Input from '../../components/UI/Forms/Input/Input';
 
-class addRecipe extends Component {
+class recipeForm extends Component {
     state = {
         form: {
-            sections: {
-                main: {
-                    fields: {
-                        name: {
-                            type: 'text',
-                            placeholder: 'Recipe name',
-                            value: '',
-                        },
-                    }
+            fields: {
+                name: {
+                    type: 'text',
+                    placeholder: 'Recipe name',
+                    label: 'Recipe name',
+                    value: '',
+                },
+                description: {
+                    type: 'text',
+                    placeholder: 'Recipe description',
+                    label: 'Recipe description',
+                    value: '',
+                },
+                image: {
+                    type: 'file',
+                    value: '',
+                    placeholder: 'Recipe image',
+                    label: 'Recipe image',
                 },
                 ingredients: {
+                    label: 'Ingredients',
+                    fieldType: 'multi',
                     defaultFields: {
                         amount: {
                             type: 'text',
@@ -41,6 +52,8 @@ class addRecipe extends Component {
                     data: {},
                 },
                 seasonings: {
+                    label: 'Seasonings',
+                    fieldType: 'multi',
                     defaultFields: {
                         seasoning: {
                             type: 'text',
@@ -51,6 +64,8 @@ class addRecipe extends Component {
                     data: {},
                 },
                 steps: {
+                    label: 'Steps',
+                    fieldType: 'multi',
                     defaultFields: {
                         step: {
                             type: 'text',
@@ -64,22 +79,37 @@ class addRecipe extends Component {
         }
     }
 
-    onChangeHandler = (e, key) => {
-        this.setState({
-            fields: {
-                ...this.state.fields,
-                [key]: {
-                    ...this.state.fields[key],
-                    value: e.target.value,
-                }
+    onChangeHandler = (e, fieldId) => {
+        let newValue;
+        if(e.target.files && e.target.files.length > 0){
+            newValue = {
+                data: {
+                    uri: 'xxxxxxxx',
+                    type: e.target.files[0].type,
+                },
+                value: e.target.value
             }
-        })
-    }    
+        } else {
+            newValue = {
+                value: e.target.value
+            }
+        }
 
-    addInputHandler = (e, sectionId) => {
+        this.setState({
+            form: update(this.state.form, {
+                fields: {
+                    [fieldId]: {
+                        $merge: newValue
+                    }
+                }
+            })
+        })
+    }
+
+    addInputHandler = (e, fieldId) => {
         e.preventDefault();
 
-        const section = this.state.form.sections[sectionId];
+        const section = this.state.form.fields[fieldId];
         const valuesToCopy = {};
         const defaultValues = {};
 
@@ -90,11 +120,11 @@ class addRecipe extends Component {
 
         this.setState({
             form: update(this.state.form, {
-                sections: {
-                    [sectionId]: {
+                fields: {
+                    [fieldId]: {
                         data: {
                             $merge: {
-                                [sectionId + new Date().getTime()]: valuesToCopy,
+                                [fieldId + new Date().getTime()]: valuesToCopy,
                             }
                         },
                         defaultFields: {
@@ -106,16 +136,16 @@ class addRecipe extends Component {
         });
     }
 
-    removeInputHandler = (e, id, sectionId) =>{
+    removeInputHandler = (e, id, fieldId) =>{
         e.preventDefault();
-        const section = this.state.form.sections[sectionId];
+        const section = this.state.form.fields[fieldId];
         const updatedData = section.data;
         delete updatedData[id];
 
         this.setState({
             form: update(this.state.form, {
-                sections: {
-                    [sectionId]: {
+                fields: {
+                    [fieldId]: {
                         data: {
                             $set: updatedData
                         }
@@ -125,11 +155,11 @@ class addRecipe extends Component {
         });
     }
     
-    editExistingInputHandler = (e, id, id2, sectionId) => {
+    editExistingInputHandler = (e, id, id2, fieldId) => {
         this.setState({
             form: update(this.state.form, {
-                sections: {
-                    [sectionId]: {
+                fields: {
+                    [fieldId]: {
                         data: {
                             [id]: {
                                 [id2]: {
@@ -143,11 +173,11 @@ class addRecipe extends Component {
         })
     }
     
-    editActiveInputHandler = (e, field, sectionId) => {
+    editActiveInputHandler = (e, field, fieldId) => {
         this.setState({
             form: update(this.state.form, {
-                sections: {
-                    [sectionId]: {
+                fields: {
+                    [fieldId]: {
                         defaultFields: {
                             [field]: {
                                 value: {$set: e.target.value}
@@ -160,15 +190,13 @@ class addRecipe extends Component {
     }
 
     render() {
-        const formData = [];
-        for (let fieldName in this.state.form) {
+        let formData = [];
+        for (let fieldName in this.state.form.fields) {
             formData.push({
-                ...this.state.form[fieldName],
+                ...this.state.form.fields[fieldName],
                 id: fieldName
             });
         }
-
-        console.log(formData);
 
         const multiInputHandlers = {
             onChangeHandler: this.editActiveInputHandler,
@@ -177,33 +205,23 @@ class addRecipe extends Component {
             removeField: this.removeInputHandler
         };
 
-        const seasoningsSection = 
-            <MultiFieldFormSection
-                id="seasonings" {...multiInputHandlers}
-                fields={this.state.form.sections.seasonings} />;
-
-        const ingredientsSection = 
-            <MultiFieldFormSection
-                id="ingredients" {...multiInputHandlers}
-                fields={this.state.form.sections.ingredients} />;
-
-        const stepsSection = 
-            <MultiFieldFormSection
-                id="steps" {...multiInputHandlers}
-                fields={this.state.form.sections.steps} />;
+        formData = formData.map(field => {
+            if (field.fieldType && field.fieldType === 'multi') {
+                return <MultiFieldFormSection
+                            fields={this.state.form.fields[field.id]}
+                            {...field}
+                            {...multiInputHandlers} />
+            } else {
+                return <div className="form-row"><Input changed={this.onChangeHandler} {...field}/></div>
+            }
+        });
 
         return (
-            <div className="main-container">
-                <form onSubmit={(e) => {e.preventDefault()}}>
-                    <h4>Ingredients</h4>
-                    {ingredientsSection}
-                    <h4>Seasonings</h4>
-                    {seasoningsSection}
-                    <h4>Steps</h4>
-                    {stepsSection}
-                </form>
-            </div>)
+            <form className="form" onSubmit={(e) => {e.preventDefault()}}>
+                {formData}
+                <input type="submit" value="Submit" />
+            </form>)
     }
 }
  
-export default addRecipe;
+export default recipeForm;

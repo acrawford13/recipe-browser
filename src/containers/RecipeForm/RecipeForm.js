@@ -15,7 +15,7 @@ class recipeForm extends Component {
                     value: '',
                 },
                 description: {
-                    type: 'text',
+                    fieldType: 'textarea',
                     placeholder: 'Recipe description',
                     label: 'Recipe description',
                     value: '',
@@ -34,19 +34,17 @@ class recipeForm extends Component {
                             type: 'text',
                             placeholder: 'Amount',
                             value: '',
-                            flex: 1,
                         },
                         measurement: {
                             type: 'text',
                             placeholder: 'Measurement',
                             value: '',
-                            flex: 1,
                         },
                         name: {
                             type: 'text',
                             placeholder: 'Ingredient Name',
                             value: '',
-                            flex: 2,
+                            size: 24,
                         },
                     },
                     data: {},
@@ -110,11 +108,9 @@ class recipeForm extends Component {
         e.preventDefault();
 
         const section = this.state.form.fields[fieldId];
-        const valuesToCopy = {};
         const defaultValues = {};
 
         for (let key in section.defaultFields){
-            valuesToCopy[key] = {...section.defaultFields[key]};
             defaultValues[key] = update(section.defaultFields[key], {value: {$set: ''}});
         }
 
@@ -124,7 +120,7 @@ class recipeForm extends Component {
                     [fieldId]: {
                         data: {
                             $merge: {
-                                [fieldId + new Date().getTime()]: valuesToCopy,
+                                [fieldId + new Date().getTime()]: section.defaultFields,
                             }
                         },
                         defaultFields: {
@@ -136,16 +132,16 @@ class recipeForm extends Component {
         });
     }
 
-    removeInputHandler = (e, id, fieldId) =>{
+    removeInputHandler = (e, dataId, groupId) =>{
         e.preventDefault();
-        const section = this.state.form.fields[fieldId];
+        const section = this.state.form.fields[groupId];
         const updatedData = section.data;
-        delete updatedData[id];
+        delete updatedData[dataId];
 
         this.setState({
             form: update(this.state.form, {
                 fields: {
-                    [fieldId]: {
+                    [groupId]: {
                         data: {
                             $set: updatedData
                         }
@@ -155,14 +151,14 @@ class recipeForm extends Component {
         });
     }
     
-    editExistingInputHandler = (e, id, id2, fieldId) => {
+    editExistingInputHandler = (e, dataId, fieldId, groupId) => {
         this.setState({
             form: update(this.state.form, {
                 fields: {
-                    [fieldId]: {
+                    [groupId]: {
                         data: {
-                            [id]: {
-                                [id2]: {
+                            [dataId]: {
+                                [fieldId]: {
                                     value: {$set: e.target.value}
                                 }
                             }
@@ -173,13 +169,13 @@ class recipeForm extends Component {
         })
     }
     
-    editActiveInputHandler = (e, field, fieldId) => {
+    editActiveInputHandler = (e, fieldId, groupId) => {
         this.setState({
             form: update(this.state.form, {
                 fields: {
-                    [fieldId]: {
+                    [groupId]: {
                         defaultFields: {
-                            [field]: {
+                            [fieldId]: {
                                 value: {$set: e.target.value}
                             }
                         }
@@ -221,7 +217,10 @@ class recipeForm extends Component {
         });
 
         return (
-            <form className="form" onSubmit={(e) => {e.preventDefault()}}>
+            <form className="form" onSubmit={(e) => {
+                    e.preventDefault();
+                    console.log(formData);
+                }}>
                 {formData}
                 <input type="submit" value="Submit" />
             </form>)

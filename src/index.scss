@@ -7,10 +7,12 @@ $nectarine: #ffc107;
 
 * {
     font-family: 'Domine', serif;
+    box-sizing: border-box;
 }
 
 button,
-.button {
+.button,
+.form input[type="submit"] {
     border-radius: 0.25rem;
     background-color: #ddd;
     color: #212121;
@@ -61,16 +63,26 @@ button,
 }
 
 .form {
+    h4 {
+        margin: 0;
+    }
+
     label {
         font-size: 0.75rem;
         display: block;
         text-transform: uppercase;
         letter-spacing: 0.6px;
     }
+    
+    textarea {
+        margin-bottom: 1rem;
+        max-width: 100%;
+        min-width: 100%;
+        padding: 0.25rem;
+        border: 0.5px solid #ccc;
+    }
 
     input {
-        // min-width: 0;
-        flex: auto;
         background-color: transparent;
         margin-bottom: 1rem;
         width: 100%;
@@ -85,12 +97,18 @@ button,
     .multiInput-row {
         display: flex;
         padding: 0.25rem;
+        flex-wrap: wrap;
+        
+        &:not(.multiInput-row--active){
+            background-color: lighten($nectarine, 45);
+        }
 
         &:not(.multiInput-row--active):nth-child(2n){
             background-color: lighten($nectarine, 35);
         }
-
+        
         &--active {
+            margin-bottom: 1rem;
             background-color: #fff;
             border: 0.5px solid #aaa;
         }
@@ -100,6 +118,8 @@ button,
             border: none;
             padding: 0.25rem;
             margin-right: 0.25rem;
+            width: auto;
+            flex: auto;
         }
     }
 }

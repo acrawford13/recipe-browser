@@ -1,13 +1,12 @@
 import React from 'react';
 
 const input = (props) => {
-    console.log(props);
     switch (props.fieldType) {
         case 'select':
             return <select value={props.value}>{props.options.map(item => (<option value={item.value}>{item.displayValue}</option>))}</select>;
         default:
             if (props.label) {
-                return <div><label for={props.id}>{props.label}</label><input
+                return <div><label htmlFor={props.id}>{props.label}</label><input
                     id={props.id}
                     style={props.style}
                     value={props.value}

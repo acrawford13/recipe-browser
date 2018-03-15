@@ -26,7 +26,8 @@ const multiFieldFormSection = (props) => {
     // function to return default input field + additional props
     const defaultInput = (field, props) => (
     <Input
-        style={{flex: field.flex}}
+        key={field.id}
+        style={{flexGrow: field.flex}}
         type={field.type}
         options={field.options}
         inputType={field.inputType}

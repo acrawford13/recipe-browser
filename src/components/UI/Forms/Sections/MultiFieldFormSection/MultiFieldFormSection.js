@@ -23,40 +23,39 @@ const multiFieldFormSection = (props) => {
         });
     }
 
-    // function to return default input field + additional props
-    const defaultInput = (field, props) => (
-    <Input
-        key={field.id}
-        style={{flexGrow: field.flex}}
-        type={field.type}
-        options={field.options}
-        inputType={field.inputType}
-        placeholder={field.placeholder}
-        value={field.value}
-        {...props} />);
+    // function to return default props
+    const defaultProps = (field) => ({
+        key: field.id,
+        style: {flexGrow: field.flex},
+        type: field.type,
+        options: field.options,
+        inputType: field.inputType,
+        placeholder: field.placeholder,
+        value: field.value});
 
     return (
         <div>
             <h4>{props.label}</h4>
             {existingData.map(
-                row => (
-                    <div className="multiInput-row">
+                row => (<div key={row.id} className="multiInput-row">
                         {row.fields.map(
-                            field => (
-                                defaultInput(field, {changed: (e) => {props.onEditHandler(e, row.id, field.id, props.id)}})
-                            )
-                        )}
-                        <span className="button" onClick={(e) => {props.removeField(e, row.id, props.id)}}>-</span>
-                    </div>
-                )
+                            field => (<Input
+                                    key={field.id}
+                                    {...defaultProps(field)}
+                                    changed={(e) => {props.onEditHandler(e, row.id, field.id, props.id)}} />))}
+                        <span className="button button--remove" onClick={(e) => {props.removeField(e, row.id, props.id)}}>-</span>
+                </div>)
             )}
             <div className="multiInput-row multiInput-row--active">
                 {defaultFields.map(
                     field => (
-                        defaultInput(field, {changed: (e) => {props.onChangeHandler(e, field.id, props.id)}})
+                        <Input
+                            key={field.id}
+                            {...defaultProps(field)}
+                            changed={(e) => {props.onChangeHandler(e, field.id, props.id)}} />
                     )
                 )}
-                <span className="button" onClick={(e) => {props.addField(e, props.id)}}>+</span>
+                <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>+</span>
             </div>
         </div>
     )

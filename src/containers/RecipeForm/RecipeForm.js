@@ -213,7 +213,10 @@ class recipeForm extends Component {
                             {...field}
                             {...multiInputHandlers} />
             } else {
-                return <div key={field.id} className="form-row"><Input changed={this.onChangeHandler} {...field}/></div>
+                return (
+                <div key={field.id} className="form-row">
+                    <Input changed={this.onChangeHandler} {...field}/>
+                </div>)
             }
         });
 

@@ -5,6 +5,10 @@
 $medium-grey: #bbb;
 $nectarine: #ffc107;
 
+$container-border: 1px solid $medium-grey;
+$container-shadow: 0 2px 3px rgba(0,0,0,0.25);
+$container-border-radius: 0.25rem;
+
 * {
     font-family: 'Domine', serif;
     box-sizing: border-box;
@@ -72,14 +76,35 @@ button,
 }
 
 .form {
+    border: $container-border;
+    box-shadow: $container-shadow;
+    border-radius: $container-border-radius;
+    margin: 1rem auto;
+    overflow: hidden;
+
+    &__title {
+        margin: 0;
+        background-color: $nectarine;
+        color: #212121;
+        padding: 1.25rem;
+        border-bottom: 1px solid $medium-grey;
+    }
+
+    &__content {
+        padding: 1rem;
+    }
+
     &__label {
-        font-size: 0.75rem;
+        // font-size: 0.75rem;
         display: block;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
+        // text-transform: uppercase;
+        // letter-spacing: 0.6px;
         font-weight: bold;
         margin: 0;
         margin-bottom: 0.5rem;
+        color: #666;
+        font-size: 0.8rem;
+        text-transform: uppercase;
     }
 
     label {
@@ -116,6 +141,12 @@ button,
     .multi-input {
         &__controls {
             margin-top: 0.5rem;
+            font-size: 0.8rem;
+
+            .button {
+                background-color: orange;
+                color: white;
+            }
         }
 
         &__row {
@@ -123,10 +154,10 @@ button,
             padding: 0.25rem;
             flex-wrap: wrap;
             align-items: center;
-            background: lighten($nectarine, 45);
+            background: lighten($medium-grey, 20);
 
             &:nth-child(2n) {
-                background: lighten($nectarine, 40);
+                background: lighten($medium-grey, 24);
             }
         
             &--active {
@@ -195,9 +226,6 @@ button,
 
 // recipe component
 // recipe item variables
-$recipe-border: 1px solid $medium-grey;
-$recipe-shadow: 0 2px 3px rgba(0,0,0,0.25);
-$recipe-border-radius: 0.25rem;
 $recipe-image-height: 80px;
 
 .recipe-list-item {
@@ -205,9 +233,9 @@ $recipe-image-height: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: $recipe-border;
-    box-shadow: $recipe-shadow;
-    border-radius: $recipe-border-radius;
+    border: $container-border;
+    box-shadow: $container-shadow;
+    border-radius: $container-border-radius;
     overflow: hidden;
     margin: 0.25rem 0;
     cursor: pointer;
@@ -251,16 +279,15 @@ $recipe-image-height: 80px;
 }
 
 .recipe-detail {
-    border: $recipe-border;
-    box-shadow: $recipe-shadow;
-    border-radius: $recipe-border-radius;
+    border: $container-border;
+    box-shadow: $container-shadow;
+    border-radius: $container-border-radius;
     margin: 1rem auto;
     overflow: hidden;
 
     &__title {
         margin: 0;
         background-color: $nectarine;
-        // background-color: #eee;
         color: #212121;
         padding: 1.25rem;
         border-bottom: 1px solid $medium-grey;

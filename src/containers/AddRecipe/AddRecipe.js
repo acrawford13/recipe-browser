@@ -7,7 +7,6 @@ const addRecipe = (props) => {
         <div>
         <NavigationBar toHome />
         <div className="main-container">
-            <h3>Add a new recipe</h3>
             <RecipeForm />
         </div>
         </div>

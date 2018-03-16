@@ -285,11 +285,12 @@ class recipeForm extends Component {
 
         formData = formData.map(field => {
             if (field.fieldType && field.fieldType === 'multi') {
-                return <MultiFieldFormSection
+                return (<div key={field.id} className="form-row">
+                    <MultiFieldFormSection
                             key={field.id}
                             fields={this.state.form.fields[field.id]}
                             {...field}
-                            {...multiInputHandlers} />
+                            {...multiInputHandlers} /></div>);
             } else {
                 return (
                 <div key={field.id} className="form-row">

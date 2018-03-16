@@ -22,10 +22,19 @@ button,
     cursor: pointer;
     display: inline-block;
     text-decoration: none;
+}
 
-    &.alert {
+.button {
+    &--alert {
         background-color: orange;
         color: white;
+    }
+
+    &--danger {
+        &:hover {
+            background-color: red;
+            color: white;
+        }
     }
 }
 
@@ -63,8 +72,14 @@ button,
 }
 
 .form {
-    h4 {
+    &__label {
+        font-size: 0.75rem;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-weight: bold;
         margin: 0;
+        margin-bottom: 0.5rem;
     }
 
     label {
@@ -75,7 +90,7 @@ button,
     }
     
     textarea {
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         max-width: 100%;
         min-width: 100%;
         padding: 0.25rem;
@@ -84,7 +99,7 @@ button,
 
     input {
         background-color: transparent;
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
         width: 100%;
         border: 0.5px solid #ccc;
         padding: 0.25rem;
@@ -94,24 +109,42 @@ button,
         display: flex;
     }
 
-    .multiInput-row {
-        display: flex;
-        padding: 0.25rem;
-        flex-wrap: wrap;
-        
-        &--active {
-            margin-bottom: 1rem;
-            background-color: #fff;
-            border: 0.5px solid #aaa;
+    .form-row {
+        margin-bottom: 1rem;
+    }
+
+    .multi-input {
+        &__controls {
+            margin-top: 0.5rem;
         }
 
-        input {
-            margin: 0;
-            border: none;
+        &__row {
+            display: flex;
             padding: 0.25rem;
-            margin-right: 0.25rem;
-            width: auto;
-            flex: auto;
+            flex-wrap: wrap;
+            align-items: center;
+            background: lighten($nectarine, 45);
+
+            &:nth-child(2n) {
+                background: lighten($nectarine, 40);
+            }
+        
+            &--active {
+                margin-bottom: 1rem;
+                background-color: #fff;
+                border: 0.5px solid #aaa;
+            }
+
+            .input-group {
+                flex: auto;
+                margin-right: 0.25rem;
+            }
+
+            input {
+                margin: 0;
+                border: none;
+                // padding: 0.25rem;
+            }
         }
     }
 }
@@ -149,6 +182,7 @@ button,
     padding-right: 1rem;
     max-width: 600px;
     margin: 0 auto;
+    margin-bottom: 2rem;
 }
 
 // recipes component

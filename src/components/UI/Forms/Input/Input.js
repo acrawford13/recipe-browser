@@ -2,7 +2,7 @@ import React from 'react';
 
 const input = (props) => {
     let input;
-    const label = props.label ? <label htmlFor={props.id}>{props.label}</label> : '';
+    const label = props.label ? <label className="form__label" htmlFor={props.id}>{props.label}</label> : '';
     switch (props.fieldType) {
         case 'select':
             input = <select value={props.value}>{props.options.map(item => (<option value={item.value}>{item.displayValue}</option>))}</select>;
@@ -24,7 +24,7 @@ const input = (props) => {
                 size={props.size || props.placeholder ? props.placeholder.length : 20} />
     };
 
-    return <div>{label}{input}</div>
+    return <div className="input-group">{label}{input}</div>
 }
  
 export default input;

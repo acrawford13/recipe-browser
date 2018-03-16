@@ -27,20 +27,21 @@ const multiFieldFormSection = (props) => {
         value: field.value});
 
     return (
-        <div>
-            <h4>{props.label}</h4>
+        <div className="multi-input">
+            <h4 className="form__label">{props.label}</h4>
             {existingData.map(
-                row => (<div key={row.id} className="multiInput-row">
+                row => (<div key={row.id} className="multi-input__row">
                         {row.fields.map(
                             field => (<Input
                                     key={field.id}
                                     {...defaultProps(field)}
                                     changed={(e) => {props.onEditHandler(e, row.id, field.id, props.id)}} />))}
-                        <span className="button button--remove" onClick={(e) => {props.removeField(e, row.id, props.id)}}>-</span>
+                        <span className="button button--remove button--danger" onClick={(e) => {props.removeField(e, row.id, props.id)}}>×</span>
                 </div>)
             )}
-
-            <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>Add a row</span>
+            <div className="multi-input__controls">
+                <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>Add a row</span>
+            </div>
         </div>
     )
 }

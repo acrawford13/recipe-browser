@@ -4,9 +4,11 @@ import axios from 'axios';
 
 import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
 import Input from '../../components/UI/Forms/Input/Input';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 class recipeForm extends Component {
     state = {
+        loading: false,
         form: {
             fields: {
                 name: {
@@ -263,9 +265,6 @@ class recipeForm extends Component {
         //     .then(res => {
         //         console.log(res.data)
         //     });
-
-        console.log(fieldData);
-        console.log(submitData);
     }
 
     render() {
@@ -299,9 +298,11 @@ class recipeForm extends Component {
             }
         });
 
+        let form = this.state.loading ? <Spinner /> : formData;
+
         return (
             <form className="form" onSubmit={(e) => {this.handleSubmission(e)}}>
-                {formData}
+                {form}
                 <input type="submit" value="Submit" />
             </form>)
     }

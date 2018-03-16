@@ -99,14 +99,6 @@ button,
         padding: 0.25rem;
         flex-wrap: wrap;
         
-        &:not(.multiInput-row--active){
-            background-color: lighten($nectarine, 45);
-        }
-
-        &:not(.multiInput-row--active):nth-child(2n){
-            background-color: lighten($nectarine, 35);
-        }
-        
         &--active {
             margin-bottom: 1rem;
             background-color: #fff;

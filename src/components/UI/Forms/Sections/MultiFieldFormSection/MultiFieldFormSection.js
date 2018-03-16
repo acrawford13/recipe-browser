@@ -2,6 +2,7 @@ import React from 'react';
 
 import Input from '../../Input/Input';
 
+
 const multiFieldFormSection = (props) => {
     // map default fields to array
     const defaultFields = [];
@@ -46,7 +47,10 @@ const multiFieldFormSection = (props) => {
                         <span className="button button--remove" onClick={(e) => {props.removeField(e, row.id, props.id)}}>-</span>
                 </div>)
             )}
-            <div className="multiInput-row multiInput-row--active">
+            
+            <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>Add a row</span>
+
+            {/* <div className="multiInput-row multiInput-row--active">
                 {defaultFields.map(
                     field => (
                         <Input
@@ -55,8 +59,7 @@ const multiFieldFormSection = (props) => {
                             changed={(e) => {props.onChangeHandler(e, field.id, props.id)}} />
                     )
                 )}
-                <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>+</span>
-            </div>
+            </div> */}
         </div>
     )
 }

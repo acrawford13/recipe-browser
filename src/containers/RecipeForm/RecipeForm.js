@@ -78,6 +78,18 @@ class recipeForm extends Component {
         }
     }
 
+    componentWillMount() {
+        const formData = {...this.state.form.fields};
+        for(let fieldName in formData){
+            if(formData[fieldName].fieldType && formData[fieldName].fieldType === 'multi'){
+                formData[fieldName] = update(formData[fieldName], {
+                    data: {[fieldName + new Date().getTime()] : {$set: {...formData[fieldName].defaultFields}}}
+                })
+            }
+        }
+        this.setState({form: update(this.state.form, {fields: {$set: formData}})});
+    }
+
     onChangeHandler = (e, fieldId) => {
         let newValue;
         if(e.target.files && e.target.files.length > 0){
@@ -169,21 +181,90 @@ class recipeForm extends Component {
             })
         })
     }
-    
-    editActiveInputHandler = (e, fieldId, groupId) => {
-        this.setState({
-            form: update(this.state.form, {
-                fields: {
-                    [groupId]: {
-                        defaultFields: {
-                            [fieldId]: {
-                                value: {$set: e.target.value}
-                            }
+
+    handleSubmission = (e) => {
+        
+        const dataToArray = (data) => {
+            let isEmpty = true;
+            const dataArray = Object.keys(data).map(
+                dataId => Object.keys(data[dataId]).map(
+                    fieldId => {
+                        if(isEmpty && data[dataId][fieldId].value) {
+                            isEmpty = false;
                         }
+                        return data[dataId][fieldId].value
+                    }
+                )
+            );
+            return isEmpty ? '' : dataArray;
+        }
+        
+        const dataToObject = (data) => {
+            let isEmpty = true;
+            const dataObject = Object.keys(data).map(
+                dataId => {
+                    const value = {};
+                    for (let key in data[dataId]){
+                        if(isEmpty && data[dataId][key].value){
+                            isEmpty = false;
+                        }
+                        value[key] = data[dataId][key].value;
+                    }
+                    return value;
+                }
+            )
+            return isEmpty ? '' : dataObject;
+        }
+
+        e.preventDefault();
+
+        let fieldData = this.state.form.fields;
+        for (let fieldName in fieldData){
+            if(fieldData[fieldName].defaultFields){
+                const defaults = {...fieldData[fieldName].defaultFields};
+                for (let defaultKey in fieldData[fieldName].defaultFields){
+                    if (fieldData[fieldName].defaultFields[defaultKey].value){
+                        fieldData = update(fieldData, {[fieldName]: {data: {[defaultKey + new Date().getTime()]: {$set: defaults}}}})
+                        fieldData = update(fieldData, {[fieldName]: {defaultFields: {[defaultKey]: {value: {$set: ''}}}}});
                     }
                 }
-            })
-        })
+            }
+        }
+
+        this.setState({
+            form: update(this.state.form, {
+                fields: {$set: fieldData}
+            })}
+        );
+
+        let submitData = {...fieldData};
+
+        for (let fieldName in submitData) {
+            let field = {...submitData[fieldName]};
+            if (field.fieldType === 'multi') {
+                let formFields = Object.keys(field.defaultFields);
+                if(formFields.length === 1){
+                    // if there is only one default field, submit data as an array
+                    field = dataToArray(field.data);
+                } else {
+                    // else submit data as an object with field names
+                    field = dataToObject(field.data);
+                }
+            } else if (field.type === 'file') {
+                field = field.data ? field.data : {};
+            } else {
+                field = field.value;
+            }
+            submitData = update(submitData, {[fieldName]: {$set: field}});
+        }
+
+        // axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', submitData)
+        //     .then(res => {
+        //         console.log(res.data)
+        //     });
+
+        console.log(fieldData);
+        console.log(submitData);
     }
 
     render() {
@@ -196,7 +277,6 @@ class recipeForm extends Component {
         }
 
         const multiInputHandlers = {
-            onChangeHandler: this.editActiveInputHandler,
             onEditHandler: this.editExistingInputHandler,
             addField: this.addInputHandler,
             removeField: this.removeInputHandler
@@ -216,86 +296,9 @@ class recipeForm extends Component {
                 </div>)
             }
         });
-        
-        const dataToArray = (data) => {
-            return Object.keys(data).map(
-                dataId => Object.keys(data[dataId]).map(
-                    fieldId => data[dataId][fieldId].value
-                )
-            );
-        }
-        
-        const dataToObject = (data) => {
-            return Object.keys(data).map(
-                dataId => {
-                    const value = {};
-                    for (let key in data[dataId]){
-                        value[key] = data[dataId][key].value;
-                    }
-                    return value;
-                }
-            )
-        }
 
         return (
-            <form className="form" onSubmit={(e) => {
-                    e.preventDefault();
-                    let submitData = {...this.state.form.fields};
-
-                    for (let fieldName in submitData) {
-                        let field = {...submitData[fieldName]};
-                        if (field.type === 'multi') {
-                            let formFields = Object.keys(field.defaultFields);
-                            if(formFields.length === 1){
-                                // if there is only one default field, submit data as an array
-                                field = dataToArray(field.data);
-                            } else {
-                                // else submit data as an object with field names
-                                field = dataToObject(field.data);
-                            }
-                        } else if (field.type === 'file') {
-                            if(field.data){
-                                field = field.data;
-                            }
-                        } else {
-                            field = field.value
-                        }
-                    }
-
-                    // let submitData = {};
-                    // for (let key in this.state.form.fields) {
-                    //     console.log(this.state.form.fields[key]);
-                    //     if(!this.state.form.fields[key].hasOwnProperty('data')){
-                    //         // add data from normal fields
-                    //         submitData[key] = {value: this.state.form.fields[key].value}
-                    //     } else {
-                    //         let subData = [];
-                    //         if (Object.keys(this.state.form.fields[key].data).length===1) {
-                    //             console.log(Object.keys(this.state.form.fields[key].data));
-                    //         } else {
-                                
-                    //         for (let key2 in this.state.form.fields[key].data) {
-                    //             let subSubData = {};
-                    //             if(Object.keys(this.state.form.fields[key].data[key2]).length === 1){
-                    //                 subSubData[key2] = this.state.form.fields[key].data[key2].value;
-                    //             } else {
-                    //                 for (let key3 in this.state.form.fields[key].data[key2]) {
-                    //                     if (Object.keys(this.state.form.fields[key].data[key2]).length === 1) {
-                    //                         subSubData = this.state.form.fields[key].data[key2][key3].value;
-                    //                     } else {
-                    //                         // put object keys into array
-                    //                         subSubData[key3] = this.state.form.fields[key].data[key2][key3].value
-                    //                     }
-                    //                 }
-                    //             }
-                    //             subData.push(subSubData);
-                    //         }
-                    //         submitData[key] = subData;
-                    //         }
-                    //     }
-                    // }
-                    console.log(submitData);
-                }}>
+            <form className="form" onSubmit={(e) => {this.handleSubmission(e)}}>
                 {formData}
                 <input type="submit" value="Submit" />
             </form>)

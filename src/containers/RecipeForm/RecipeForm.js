@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
 import axios from 'axios';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
 import Input from '../../components/UI/Forms/Input/Input';
@@ -13,13 +14,11 @@ class recipeForm extends Component {
             fields: {
                 name: {
                     type: 'text',
-                    placeholder: 'Recipe name',
                     label: 'Recipe name',
                     value: '',
                 },
                 description: {
                     fieldType: 'textarea',
-                    placeholder: 'Recipe description',
                     label: 'Recipe description',
                     value: '',
                 },
@@ -262,10 +261,14 @@ class recipeForm extends Component {
             submitData = update(submitData, {[fieldName]: {$set: field}});
         }
 
-        // axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', submitData)
-        //     .then(res => {
-        //         console.log(res.data)
-        //     });
+        axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', submitData)
+            .then(res => {
+                console.log(res.data);
+                this.props.history.push('/');
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     render() {
@@ -303,10 +306,13 @@ class recipeForm extends Component {
 
         return (
             <form className="form" onSubmit={(e) => {this.handleSubmission(e)}}>
-                {form}
-                <input type="submit" value="Submit" />
+                <h3 className="form__title">Add a new recipe</h3>
+                <div className="form__content">
+                    {form}
+                    <input type="submit" value="Submit" />
+                </div>
             </form>)
     }
 }
  
-export default recipeForm;
+export default withRouter(recipeForm);

@@ -4,7 +4,7 @@ import Input from '../../Input/Input';
 
 
 const multiFieldFormSection = (props) => {
-
+    const error = props.error ? <p className="input__error">{props.error}</p> : '';
     // map existing data to array
     const existingData = [];
     for (let key in props.fields.data) {
@@ -33,12 +33,13 @@ const multiFieldFormSection = (props) => {
                 row => (<div key={row.id} className="multi-input__row">
                         {row.fields.map(
                             field => (<Input
-                                    key={field.id}
-                                    {...defaultProps(field)}
-                                    changed={(e) => {props.onEditHandler(e, row.id, field.id, props.id)}} />))}
+                                key={field.id}
+                                {...defaultProps(field)}
+                                changed={(e) => {props.onEditHandler(e, row.id, field.id, props.id)}} />))}
                         <span className="button button--remove button--danger" onClick={(e) => {props.removeField(e, row.id, props.id)}}>×</span>
                 </div>)
             )}
+            {error}
             <div className="multi-input__controls">
                 <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>Add a row</span>
             </div>

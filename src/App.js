@@ -15,21 +15,21 @@ class App extends Component {
         recipes: [],
     }
 
-    componentDidMount () {
-        axios.get('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes')
-            .then(res => {
-                this.setState({
-                    recipes: res.data,
-                    loading: false
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    loading: false,
-                    error: true
-                })
-            });
-    }
+    // componentDidMount () {
+    //     axios.get('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes')
+    //         .then(res => {
+    //             this.setState({
+    //                 recipes: res.data,
+    //                 loading: false
+    //             });
+    //         })
+    //         .catch(error => {
+    //             this.setState({
+    //                 loading: false,
+    //                 error: true
+    //             })
+    //         });
+    // }
 
     onSearchTermUpdated = (e) => {
         this.setState({searchTerm: e.target.value});

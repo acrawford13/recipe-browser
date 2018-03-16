@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
 import axios from 'axios';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
 import Input from '../../components/UI/Forms/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
+import { checkValidity, dataToArray, dataToObject } from '../../utilities/utilities';
+
 class recipeForm extends Component {
     state = {
         loading: false,
         form: {
+            isValid: false,
             fields: {
                 name: {
                     type: 'text',
                     label: 'Recipe name',
                     value: '',
+                    validation: {
+                        required: true,
+                    },
+                    touched: false,
+                    error: null,
                 },
                 description: {
                     fieldType: 'textarea',
@@ -50,6 +58,10 @@ class recipeForm extends Component {
                         },
                     },
                     data: {},
+                    validation: {
+                        minDataLength: 1,
+                    },
+                    error: false,
                 },
                 seasonings: {
                     label: 'Seasonings',
@@ -62,6 +74,10 @@ class recipeForm extends Component {
                         }
                     },
                     data: {},
+                    validation: {
+                        minDataLength: 1,
+                    },
+                    error: false,
                 },
                 steps: {
                     label: 'Steps',
@@ -74,6 +90,10 @@ class recipeForm extends Component {
                         }
                     },
                     data: {},
+                    validation: {
+                        minDataLength: 1,
+                    },
+                    error: false,
                 }
             }
         }
@@ -83,10 +103,10 @@ class recipeForm extends Component {
         super(props);
         const formData = {...this.state.form.fields};
         
-        for(let fieldName in formData){
-            if(formData[fieldName].fieldType && formData[fieldName].fieldType === 'multi'){
-                formData[fieldName] = update(formData[fieldName], {
-                    data: {[fieldName + new Date().getTime()] : {$set: {...formData[fieldName].defaultFields}}}
+        for(let fieldId in formData){
+            if(formData[fieldId].fieldType && formData[fieldId].fieldType === 'multi'){
+                formData[fieldId] = update(formData[fieldId], {
+                    data: {[fieldId + new Date().getTime()] : {$set: {...formData[fieldId].defaultFields}}}
                 })
             }
         }
@@ -105,7 +125,8 @@ class recipeForm extends Component {
             }
         } else {
             newValue = {
-                value: e.target.value
+                value: e.target.value,
+                error: checkValidity(e.target.value, this.state.form.fields[fieldId].validation)
             }
         }
 
@@ -141,6 +162,12 @@ class recipeForm extends Component {
                         },
                         defaultFields: {
                             $set: defaultValues
+                        },
+                        error: {
+                            $set: checkValidity(
+                                this.state.form.fields[fieldId].data,
+                                this.state.form.fields[fieldId].validation
+                            )
                         }
                     }
                 }
@@ -160,7 +187,8 @@ class recipeForm extends Component {
                     [groupId]: {
                         data: {
                             $set: updatedData
-                        }
+                        },
+                        error: {$set: checkValidity(this.state.form.fields[groupId].data, this.state.form.fields[groupId].validation)}
                     }
                 }
             })
@@ -178,72 +206,71 @@ class recipeForm extends Component {
                                     value: {$set: e.target.value}
                                 }
                             }
-                        }
+                        },
+                        error: {$set: checkValidity(this.state.form.fields[groupId].data, this.state.form.fields[groupId].validation)}
                     }
                 }
             })
         })
     }
 
-    handleSubmission = (e) => {
-        
-        const dataToArray = (data) => {
-            let isEmpty = true;
-            const dataArray = Object.keys(data).map(
-                dataId => Object.keys(data[dataId]).map(
-                    fieldId => {
-                        if(isEmpty && data[dataId][fieldId].value) {
-                            isEmpty = false;
-                        }
-                        return data[dataId][fieldId].value
-                    }
-                )
-            );
-            return isEmpty ? '' : dataArray;
-        }
-        
-        const dataToObject = (data) => {
-            let isEmpty = true;
-            const dataObject = Object.keys(data).map(
-                dataId => {
-                    const value = {};
-                    for (let key in data[dataId]){
-                        if(isEmpty && data[dataId][key].value){
-                            isEmpty = false;
-                        }
-                        value[key] = data[dataId][key].value;
-                    }
-                    return value;
+    validateForm = (form) => {
+        let validatedForm = form;
+        for (let fieldId in validatedForm.fields) {
+            if(validatedForm.fields[fieldId].validation){
+                const data = validatedForm.fields[fieldId].data ? validatedForm.fields[fieldId].data : validatedForm.fields[fieldId].value;
+                const error = checkValidity(data, validatedForm.fields[fieldId].validation);
+                if (error && form.isValid){
+                    form.isValid = false;
                 }
-            )
-            return isEmpty ? '' : dataObject;
+                validatedForm = update(validatedForm, {fields: {[fieldId]: {
+                    error: {$set: error},
+                    touched: {$set: true},
+                }}});
+            }
         }
+        return validatedForm;
+    }
+
+    handleSubmission = (e) => {
+        // this.setState({form: this.validateForm(this.state.form)});
 
         e.preventDefault();
 
-        let fieldData = this.state.form.fields;
-        for (let fieldName in fieldData){
-            if(fieldData[fieldName].defaultFields){
-                const defaults = {...fieldData[fieldName].defaultFields};
-                for (let defaultKey in fieldData[fieldName].defaultFields){
-                    if (fieldData[fieldName].defaultFields[defaultKey].value){
-                        fieldData = update(fieldData, {[fieldName]: {data: {[defaultKey + new Date().getTime()]: {$set: defaults}}}})
-                        fieldData = update(fieldData, {[fieldName]: {defaultFields: {[defaultKey]: {value: {$set: ''}}}}});
+        let form = this.state.form;
+
+        for (let fieldId in form.fields){
+            if(form.fields[fieldId].defaultFields){
+                const defaults = {...form.fields[fieldId].defaultFields};
+                for (let defaultKey in form.fields[fieldId].defaultFields){
+                    if (form.fields[fieldId].defaultFields[defaultKey].value){
+                        form = update(form, {fields: {[fieldId]: {data: {[defaultKey + new Date().getTime()]: {$set: defaults}}}}})
+                        form = update(form, {fields: {[fieldId]: {defaultFields: {[defaultKey]: {value: {$set: ''}}}}}});
+                    }
+                }
+
+                for (let key in form.fields[fieldId].data){
+                    if(!Object.keys(form.fields[fieldId].data[key]).map(item => form.fields[fieldId].data[key][item].value).join('').trim()){
+                        form = update(form, {fields: {[fieldId]: {data: {$unset: [key]}}}});
                     }
                 }
             }
         }
 
+        form = this.validateForm(form);
+
         this.setState({
-            form: update(this.state.form, {
-                fields: {$set: fieldData}
-            })}
-        );
+            form: update(this.state.form, {$set: form}),
+        });
 
-        let submitData = {...fieldData};
+        if(!form.isValid) {
+            return;
+        }
 
-        for (let fieldName in submitData) {
-            let field = {...submitData[fieldName]};
+        let submitData = {...form.fields};
+
+        for (let fieldId in submitData) {
+            let field = {...submitData[fieldId]};
             if (field.fieldType === 'multi') {
                 let formFields = Object.keys(field.defaultFields);
                 if(formFields.length === 1){
@@ -258,25 +285,27 @@ class recipeForm extends Component {
             } else {
                 field = field.value;
             }
-            submitData = update(submitData, {[fieldName]: {$set: field}});
+            submitData = update(submitData, {[fieldId]: {$set: field}});
         }
 
-        axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', submitData)
-            .then(res => {
-                console.log(res.data);
-                this.props.history.push('/');
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        console.log(submitData);
+
+        // axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', submitData)
+        //     .then(res => {
+        //         console.log(res.data);
+        //         this.props.history.push('/');
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     });
     }
 
     render() {
         let formData = [];
-        for (let fieldName in this.state.form.fields) {
+        for (let fieldId in this.state.form.fields) {
             formData.push({
-                ...this.state.form.fields[fieldName],
-                id: fieldName
+                ...this.state.form.fields[fieldId],
+                id: fieldId
             });
         }
 

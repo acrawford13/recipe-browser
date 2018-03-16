@@ -128,6 +128,11 @@ button,
         width: 100%;
         border: 0.5px solid #ccc;
         padding: 0.25rem;
+
+        &.error {
+            background-color: #ffcccc;
+            border: 0.5px solid red;
+        }
     }
 
     .input-row {

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import RecipeList from './RecipeList/RecipeList';
 import SearchBar from '../../Navigation/SearchBar/SearchBar';
+import Spinner from '../../UI/Spinner/Spinner';
 
 const recipeBrowser = (props) => {
     const filteredRecipes = props.recipes
@@ -23,15 +24,20 @@ const recipeBrowser = (props) => {
         }
     }
 
-    return (
-        <div>
-            <SearchBar changed={props.onSearchTermUpdated} searchTerm={props.searchTerm} />
-            <div className="main-container">
-                {searchMessage}
-                <RecipeList recipes={filteredRecipes} />
-            </div>
-        </div>
-    )
+    let recipeBrowser = <Spinner />;
+
+    if(!props.loading) {
+        recipeBrowser = (
+            <div>
+                <SearchBar changed={props.onSearchTermUpdated} searchTerm={props.searchTerm} />
+                <div className="main-container">
+                    {searchMessage}
+                    <RecipeList recipes={filteredRecipes} />
+                </div>
+            </div>);
+    }
+
+    return recipeBrowser;
 }
  
 export default recipeBrowser;

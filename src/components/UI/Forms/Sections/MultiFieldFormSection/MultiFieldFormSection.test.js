@@ -24,6 +24,6 @@ describe('<MultiFieldFormSection />', () => {
             },
         }
         let wrapper = shallow(<MultiFieldFormSection fields={fields} />);
-        expect(wrapper.find('div.multiInput-row')).toHaveLength(Object.keys(fields.data).length + 1);
+        expect(wrapper.find('div.multiInput-row')).toHaveLength(Object.keys(fields.data).length);
     })
 })

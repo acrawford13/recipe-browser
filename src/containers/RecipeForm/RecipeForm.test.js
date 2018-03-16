@@ -1,9 +1,9 @@
-import { configure, mount } from 'enzyme';
+import { configure, shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 
 import RecipeForm from './RecipeForm';
-import MultiFormFieldSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
+import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
 
 configure({ adapter: new Adapter() });
 
@@ -18,6 +18,11 @@ describe('<RecipeForm /> basic behaviour', () => {
             }
         }
     }
+
+    it('should render', () => {
+        let wrapper = shallow(<RecipeForm />);
+        expect(wrapper).toBeDefined();
+    });
 
     it('should render the correct number of inputs', () => {
         let wrapper = mount(<RecipeForm />);
@@ -35,7 +40,7 @@ describe('<RecipeForm /> multi input behaviour', () => {
                     defaultFields: {
                         field1: {
                             type: 'text',
-                            value: 'test value',
+                            value: '',
                         },
                     },
                     data: {
@@ -57,33 +62,38 @@ describe('<RecipeForm /> multi input behaviour', () => {
 
     let wrapper;
     let prevDataLength;
-    let groupName, group;
+    let groupName;
+    let group;
     
     beforeEach(() => {
         wrapper = mount(<RecipeForm />);
         wrapper.setState(data);
-        prevDataLength = Object.keys(data.form.fields.group1.data).length;
         groupName = 'group1';
-        group = wrapper.find(MultiFormFieldSection).findWhere(n => n.key() === groupName);
+        prevDataLength = Object.keys(data.form.fields.group1.data).length;
+        group = wrapper.find(MultiFieldFormSection).filterWhere(n => n.key() === groupName);
     });
 
-    it('should update the correct defaultField value when the active field is updated', () => {
-        const fieldName = 'field1';
-        const newValue = 'test value';
-        group.find('.multiInput-row--active input').findWhere(n => n.key() === fieldName).simulate('change', {target: {value: newValue}});
-        expect(wrapper.state().form.fields[groupName].defaultFields[fieldName].value).toBe(newValue);
-    });
+    it('should populate the data on load', () => {
+        let newWrapper = mount(<RecipeForm />);
+        expect(Object.keys(newWrapper.state().form.fields.ingredients.data)).toHaveLength(1);
+    })
 
     it('should update the correct data value when an existing field is updated', () => {
         const fieldName = 'field1';
         const dataId = 'group11234';
         const newValue = 'test value';
-        group.find('.multiInput-row').findWhere(n => n.key() === dataId).find('input').findWhere(n => n.key() === fieldName).simulate('change', {target: {value: newValue}});
+        group.find('.multiInput-row')
+            .filterWhere(n => n.key() === dataId)
+            .find('input')
+            .filterWhere(n => n.key() === fieldName)
+            .children()
+            .find('input')
+            .simulate('change', {target: {value: newValue}});
         expect(wrapper.state().form.fields[groupName].data[dataId][fieldName].value).toBe(newValue);
     });
 
     it('should add data to the correct section when add button is clicked', () => {
-        group.find('.multiInput-row .button--add').first().simulate('click');
+        group.find('.button--add').simulate('click');
         expect(Object.keys(wrapper.state().form.fields[groupName].data).length).toEqual(prevDataLength + 1);
     });
 

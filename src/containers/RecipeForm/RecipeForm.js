@@ -78,7 +78,8 @@ class recipeForm extends Component {
         }
     }
 
-    componentWillMount() {
+    constructor(props) {
+        super(props);
         const formData = {...this.state.form.fields};
         for(let fieldName in formData){
             if(formData[fieldName].fieldType && formData[fieldName].fieldType === 'multi'){
@@ -87,7 +88,7 @@ class recipeForm extends Component {
                 })
             }
         }
-        this.setState({form: update(this.state.form, {fields: {$set: formData}})});
+        this.state = update(this.state, {form: {fields: {$set: formData}}});
     }
 
     onChangeHandler = (e, fieldId) => {

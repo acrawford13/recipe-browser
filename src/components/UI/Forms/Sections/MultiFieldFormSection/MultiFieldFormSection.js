@@ -4,14 +4,6 @@ import Input from '../../Input/Input';
 
 
 const multiFieldFormSection = (props) => {
-    // map default fields to array
-    const defaultFields = [];
-    for (let key in props.fields.defaultFields) {
-        defaultFields.push({
-            ...props.fields.defaultFields[key],
-            id: key,
-        });
-    }
 
     // map existing data to array
     const existingData = [];
@@ -47,19 +39,8 @@ const multiFieldFormSection = (props) => {
                         <span className="button button--remove" onClick={(e) => {props.removeField(e, row.id, props.id)}}>-</span>
                 </div>)
             )}
-            
-            <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>Add a row</span>
 
-            {/* <div className="multiInput-row multiInput-row--active">
-                {defaultFields.map(
-                    field => (
-                        <Input
-                            key={field.id}
-                            {...defaultProps(field)}
-                            changed={(e) => {props.onChangeHandler(e, field.id, props.id)}} />
-                    )
-                )}
-            </div> */}
+            <span className="button button--add" onClick={(e) => {props.addField(e, props.id)}}>Add a row</span>
         </div>
     )
 }

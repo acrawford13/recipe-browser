@@ -9,6 +9,7 @@ const input = (props) => {
             break;
         case 'textarea':
             input = <textarea
+                id={props.id}
                 style={props.style}
                 value={props.value}
                 onChange={(e) => {props.changed(e, props.id)}}
@@ -16,6 +17,7 @@ const input = (props) => {
             break;
         default:
             input = <input
+                id={props.id}
                 style={props.style}
                 value={props.value}
                 onChange={(e) => {props.changed(e, props.id)}}

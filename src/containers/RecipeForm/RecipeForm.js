@@ -83,6 +83,7 @@ class recipeForm extends Component {
     constructor(props) {
         super(props);
         const formData = {...this.state.form.fields};
+        
         for(let fieldName in formData){
             if(formData[fieldName].fieldType && formData[fieldName].fieldType === 'multi'){
                 formData[fieldName] = update(formData[fieldName], {

@@ -12,7 +12,7 @@ const formatIngredient = (ingredient) => {
 const recipeView = (props) => {
     return (
         <div>
-            <NavigationBar />
+            <NavigationBar toHome addRecipe />
             <div className="main-container">
                 <div className="recipe-detail">
                     <h2 className="recipe-detail__title">{props.recipe.name}</h2>

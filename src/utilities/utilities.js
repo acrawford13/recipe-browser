@@ -3,7 +3,7 @@ export const checkValidity = (value, rules) => {
     let error = null;
 
     if(!rules) {
-        return {valid: isValid, error: null};
+        return error;
     }
 
     if(rules.required) {
@@ -13,15 +13,10 @@ export const checkValidity = (value, rules) => {
 
     if(rules.minDataLength){
         isValid = Object.keys(value).length >= rules.minDataLength;
-        error = !isValid ? 'This field must have at least 1 entry' : null;
+        let entries = rules.minDataLength === 1 ? 'entry' : 'entries';
+        error = !isValid ? 'This field must have at least ' + rules.minDataLength + ' ' + entries : null;
     }
-
-    console.log(value);
     return error;
-}
-
-export const checkMultiValidity = (data, rules) => {
-    return false;
 }
 
 export const dataToArray = (data) => {

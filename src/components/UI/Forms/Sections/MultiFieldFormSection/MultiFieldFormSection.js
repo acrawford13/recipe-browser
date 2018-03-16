@@ -4,7 +4,7 @@ import Input from '../../Input/Input';
 
 
 const multiFieldFormSection = (props) => {
-    const error = props.error ? <p className="input__error">{props.error}</p> : '';
+    const error = props.error ? <p className="multi-input__error">{props.error}</p> : '';
     // map existing data to array
     const existingData = [];
     for (let key in props.fields.data) {

@@ -7,7 +7,7 @@ import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiField
 import Input from '../../components/UI/Forms/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
-import { checkValidity, dataToArray, dataToObject } from '../../utilities/utilities';
+import { checkValidity, removeEmptyRows, validateForm, formatDataSubmission } from './RecipeFormUtilities';
 
 class recipeForm extends Component {
     state = {
@@ -74,10 +74,6 @@ class recipeForm extends Component {
                         }
                     },
                     data: {},
-                    validation: {
-                        minDataLength: 1,
-                    },
-                    error: false,
                 },
                 steps: {
                     label: 'Steps',
@@ -213,91 +209,28 @@ class recipeForm extends Component {
             })
         })
     }
-
-    validateForm = (form) => {
-        let validatedForm = form;
-        for (let fieldId in validatedForm.fields) {
-            if(validatedForm.fields[fieldId].validation){
-                const data = validatedForm.fields[fieldId].data ? validatedForm.fields[fieldId].data : validatedForm.fields[fieldId].value;
-                const error = checkValidity(data, validatedForm.fields[fieldId].validation);
-                if (error && form.isValid){
-                    form.isValid = false;
-                }
-                validatedForm = update(validatedForm, {fields: {[fieldId]: {
-                    error: {$set: error},
-                    touched: {$set: true},
-                }}});
-            }
-        }
-        return validatedForm;
-    }
-
+    
     handleSubmission = (e) => {
-        // this.setState({form: this.validateForm(this.state.form)});
-
         e.preventDefault();
 
-        let form = this.state.form;
-
-        for (let fieldId in form.fields){
-            if(form.fields[fieldId].defaultFields){
-                const defaults = {...form.fields[fieldId].defaultFields};
-                for (let defaultKey in form.fields[fieldId].defaultFields){
-                    if (form.fields[fieldId].defaultFields[defaultKey].value){
-                        form = update(form, {fields: {[fieldId]: {data: {[defaultKey + new Date().getTime()]: {$set: defaults}}}}})
-                        form = update(form, {fields: {[fieldId]: {defaultFields: {[defaultKey]: {value: {$set: ''}}}}}});
-                    }
-                }
-
-                for (let key in form.fields[fieldId].data){
-                    if(!Object.keys(form.fields[fieldId].data[key]).map(item => form.fields[fieldId].data[key][item].value).join('').trim()){
-                        form = update(form, {fields: {[fieldId]: {data: {$unset: [key]}}}});
-                    }
-                }
-            }
-        }
-
-        form = this.validateForm(form);
-
-        this.setState({
-            form: update(this.state.form, {$set: form}),
-        });
-
-        if(!form.isValid) {
+        const validatedForm = validateForm(this.state.form);
+        this.setState({form: validatedForm});
+        
+        // if form is not valid, stop form submission
+        if(!validatedForm.isValid) {
             return;
         }
 
-        let submitData = {...form.fields};
+        const formattedData = formatDataSubmission(validatedForm);
 
-        for (let fieldId in submitData) {
-            let field = {...submitData[fieldId]};
-            if (field.fieldType === 'multi') {
-                let formFields = Object.keys(field.defaultFields);
-                if(formFields.length === 1){
-                    // if there is only one default field, submit data as an array
-                    field = dataToArray(field.data);
-                } else {
-                    // else submit data as an object with field names
-                    field = dataToObject(field.data);
-                }
-            } else if (field.type === 'file') {
-                field = field.data ? field.data : {};
-            } else {
-                field = field.value;
-            }
-            submitData = update(submitData, {[fieldId]: {$set: field}});
-        }
-
-        console.log(submitData);
-
-        // axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', submitData)
-        //     .then(res => {
-        //         console.log(res.data);
-        //         this.props.history.push('/');
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
+        axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', formattedData)
+            .then(res => {
+                console.log(res.data);
+                this.props.history.push('/');
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     render() {

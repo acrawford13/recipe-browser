@@ -10,7 +10,6 @@ const input = (props) => {
             break;
         case 'textarea':
             input = <textarea
-                className={(props.touched && !props.valid) ? 'input--error' : ''}
                 id={props.id}
                 style={props.style}
                 value={props.value}
@@ -19,7 +18,6 @@ const input = (props) => {
             break;
         default:
             input = <input
-                className={props.error ? 'error' : ''}
                 id={props.id}
                 style={props.style}
                 value={props.value}

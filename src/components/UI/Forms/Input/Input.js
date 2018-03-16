@@ -1,41 +1,30 @@
 import React from 'react';
 
 const input = (props) => {
+    let input;
+    const label = props.label ? <label htmlFor={props.id}>{props.label}</label> : '';
     switch (props.fieldType) {
         case 'select':
-            return <select value={props.value}>{props.options.map(item => (<option value={item.value}>{item.displayValue}</option>))}</select>;
+            input = <select value={props.value}>{props.options.map(item => (<option value={item.value}>{item.displayValue}</option>))}</select>;
+            break;
         case 'textarea':
-            if (props.label) {
-                return <div><label htmlFor={props.id}>{props.label}</label><textarea
-                style={props.style}
-                value={props.value}
-                onChange={(e) => {props.changed(e, props.id)}}
-                placeholder={props.placeholder} /></div>
-            }
-            return <textarea
+            input = <textarea
                 style={props.style}
                 value={props.value}
                 onChange={(e) => {props.changed(e, props.id)}}
                 placeholder={props.placeholder} />
+            break;
         default:
-            if (props.label) {
-                return <div><label htmlFor={props.id}>{props.label}</label><input
-                    id={props.id}
-                    style={props.style}
-                    value={props.value}
-                    onChange={(e) => {props.changed(e, props.id)}}
-                    placeholder={props.placeholder}
-                    type={props.type}
-                    size={props.size ? props.size : props.placeholder.length} /></div>
-            }
-            return <input
+            input = <input
                 style={props.style}
                 value={props.value}
                 onChange={(e) => {props.changed(e, props.id)}}
                 placeholder={props.placeholder}
                 type={props.type}
-                size={props.size ? props.size : props.placeholder.length} />
-    }
+                size={props.size || props.placeholder ? props.placeholder.length : 20} />
+    };
+
+    return <div>{label}{input}</div>
 }
  
 export default input;

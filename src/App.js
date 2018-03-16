@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 import Layout from './components/Layout/Layout';
@@ -18,10 +18,16 @@ class App extends Component {
     componentDidMount () {
         axios.get('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes')
             .then(res => {
-                this.setState({recipes: res.data, loading: false});
+                this.setState({
+                    recipes: res.data,
+                    loading: false
+                });
             })
             .catch(error => {
-                this.setState({loading: false, error: true})
+                this.setState({
+                    loading: false,
+                    error: true
+                })
             });
     }
 
@@ -37,7 +43,7 @@ class App extends Component {
                     <Route path="/recipes/add" exact render={() => (<AddRecipe />)} />
                     <Route path="/recipes/:id" exact render={(props) => {
                         const recipe = this.state.recipes.find(recipe => recipe.id === +props.match.params.id);
-                        return <RecipeView recipe={recipe} />
+                        return <RecipeView loading={this.state.loading} recipe={recipe} />
                     }} />
                     <Route path="/" exact render={() => (
                         <RecipeBrowser
@@ -47,6 +53,7 @@ class App extends Component {
                             onSearchTermUpdated={this.onSearchTermUpdated}
                             />
                     )} />
+                    <Redirect to="/" />
                     </Switch>
                 </Layout>
             </BrowserRouter>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const addRecipe = <Link to="/recipes/add" className="button alert">Add recipe</Link>;
-const toHome = <Link to="/" className="button">❮ Back to recipe browser</Link>;
+const addRecipe = <Link to="/recipes/add" className="button alert button--addRecipe">Add recipe</Link>;
+const toHome = <Link to="/" className="button button--toHome">❮ Back to recipe browser</Link>;
 
 const navigationBar = (props) => (
     <div className='page-nav-bar__wrapper'>

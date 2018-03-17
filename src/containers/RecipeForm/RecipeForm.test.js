@@ -2,8 +2,8 @@ import { configure, shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 
-import RecipeForm from './RecipeForm';
-import MultiInput from '../../components/UI/Forms/Sections/MultiInput/MultiInput';
+import { RecipeForm } from './RecipeForm';
+import MultiInput from '../../components/UI/Forms/MultiInput/MultiInput';
 
 configure({ adapter: new Adapter() });
 
@@ -82,7 +82,7 @@ describe('<RecipeForm /> multi input behaviour', () => {
         const fieldName = 'field1';
         const dataId = 'group11234';
         const newValue = 'test value';
-        group.find('.multiInput-row')
+        group.find('.multi-input__row')
             .filterWhere(n => n.key() === dataId)
             .find('input')
             .filterWhere(n => n.key() === fieldName)
@@ -98,7 +98,7 @@ describe('<RecipeForm /> multi input behaviour', () => {
     });
 
     it('should remove data from the correct section when remove button is clicked', () => {
-        group.find('.multiInput-row .button--remove').first().simulate('click');
+        group.find('.multi-input__row .button--remove').first().simulate('click');
         expect(Object.keys(wrapper.state().form.fields[groupName].data).length).toEqual(prevDataLength - 1);
     });
 });

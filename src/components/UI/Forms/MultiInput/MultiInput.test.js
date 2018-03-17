@@ -24,6 +24,6 @@ describe('<MultiInput />', () => {
             },
         }
         let wrapper = shallow(<MultiInput fields={fields} />);
-        expect(wrapper.find('div.multiInput-row')).toHaveLength(Object.keys(fields.data).length);
+        expect(wrapper.find('div.multi-input__row')).toHaveLength(Object.keys(fields.data).length);
     })
 })

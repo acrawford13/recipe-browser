@@ -11,7 +11,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 import { checkValidity, validateForm, formatDataSubmission } from './RecipeFormUtilities';
 
-class recipeForm extends Component {
+export class RecipeForm extends Component {
     state = {
         success: false,
         loading: false,
@@ -284,4 +284,4 @@ class recipeForm extends Component {
     }
 }
  
-export default withRouter(withErrorHandler(recipeForm, axios));
+export default withRouter(withErrorHandler(RecipeForm, axios));

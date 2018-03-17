@@ -5,10 +5,10 @@ import NavigationBar from '../../Navigation/NavigationBar/NavigationBar';
 const addRecipe = (props) => {
     return (
         <div>
-        <NavigationBar toHome />
-        <div className="main-container">
-            <RecipeForm />
-        </div>
+            <NavigationBar toHome />
+            <div className="main-container">
+                <RecipeForm />
+            </div>
         </div>
     )
 }

@@ -2,8 +2,17 @@
 
 
 // colors
+$white: #fff;
+$light-grey: #eee;
+$medium-light-grey: #ddd;
 $medium-grey: #bbb;
+$dark-grey: #666;
+$charcoal: #212121;
 $nectarine: #ffc107;
+$orange: #ffa600;
+$light-red: #ffcccc;
+$dark-red: #800000;
+$red: #f00;
 
 $container-border: 1px solid $medium-grey;
 $container-shadow: 0 2px 3px rgba(0,0,0,0.25);
@@ -18,8 +27,8 @@ button,
 .button,
 .form input[type="submit"] {
     border-radius: 0.25rem;
-    background-color: #ddd;
-    color: #212121;
+    background-color: $medium-light-grey;
+    color: $charcoal;
     border: none;
     padding: 0.5rem 0.75rem;
     outline: none;
@@ -30,14 +39,14 @@ button,
 
 .button {
     &--alert {
-        background-color: orange;
-        color: white;
+        background-color: $orange;
+        color: $white;
     }
 
     &--danger {
         &:hover {
-            background-color: red;
-            color: white;
+            background-color: $red;
+            color: $white;
         }
     }
 }
@@ -48,7 +57,7 @@ button,
     text-align: center;
 
     &__title {
-        color: #212121;
+        color: $charcoal;
         font-weight: bold;
         font-size: 0.85rem;
         text-transform: uppercase;
@@ -65,7 +74,7 @@ button,
     margin: 0 auto;
     
     &__wrapper {
-        background-color: #eee;
+        background-color: $light-grey;
     }
 }
 
@@ -79,7 +88,7 @@ button,
     &__title {
         margin: 0;
         background-color: $nectarine;
-        color: #212121;
+        color: $charcoal;
         padding: 1.25rem;
         border-bottom: 1px solid $medium-grey;
     }
@@ -93,7 +102,7 @@ button,
         font-weight: bold;
         margin: 0;
         margin-bottom: 0.5rem;
-        color: #666;
+        color: $dark-grey;
         font-size: 0.8rem;
         text-transform: uppercase;
     }
@@ -102,23 +111,23 @@ button,
         max-width: 100%;
         min-width: 100%;
         padding: 0.25rem;
-        border: 0.5px solid #ccc;
+        border: 0.5px solid $medium-grey;
     }
 
     input {
         background-color: transparent;
         width: 100%;
-        border: 0.5px solid #ccc;
+        border: 0.5px solid $medium-grey;
         padding: 0.25rem;
     }
 
     .input {
         &__error {
             margin-top: 0;
-            border: 0.5px solid red;
+            border: 0.5px solid $red;
             border-top: none;
-            background-color: #ffcccc;
-            color: darkred;
+            background-color: $light-red;
+            color: $dark-red;
             font-size: 0.8rem;
             padding: 0.5rem;
         }
@@ -134,9 +143,9 @@ button,
 
     .multi-input {
         &__error {
-            border: 0.5px solid red;
-            background-color: #ffcccc;
-            color: darkred;
+            border: 0.5px solid $red;
+            background-color: $light-red;
+            color: $dark-red;
             font-size: 0.8rem;
             padding: 0.5rem;
         }
@@ -146,8 +155,8 @@ button,
             font-size: 0.8rem;
 
             .button {
-                background-color: orange;
-                color: white;
+                background-color: $orange;
+                color: $white;
             }
         }
 
@@ -156,16 +165,10 @@ button,
             padding: 0.25rem;
             flex-wrap: wrap;
             align-items: center;
-            background: lighten($medium-grey, 20);
+            background-color: $light-grey;
 
             &:nth-child(2n) {
-                background: lighten($medium-grey, 24);
-            }
-        
-            &--active {
-                margin-bottom: 1rem;
-                background-color: #fff;
-                border: 0.5px solid #aaa;
+                background-color: lighten($light-grey, 4);
             }
 
             .input-group {
@@ -190,19 +193,19 @@ button,
 
 .search-container {
     padding: 0.5rem 1rem;
-    background-color: #eee;
+    background-color: $light-grey;
     display: flex;
     justify-content: space-between;
     max-width: 600px;
     margin: 0 auto;
 
     &__wrapper {
-        background-color: #eee;
+        background-color: $light-grey;
     }
 
     &__input {
         border-radius: 0.25rem;
-        border: 0.5px solid grey;
+        border: 0.5px solid $medium-grey;
         padding: 0.5rem;
         outline: none;
         margin-right: 1rem;
@@ -230,7 +233,7 @@ button,
 $recipe-image-height: 80px;
 
 .recipe-list-item {
-    background-color: white;
+    background-color: $white;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -243,7 +246,7 @@ $recipe-image-height: 80px;
     transition: transform 0.3s;
     width: 100%;
     text-decoration: none;
-    color: #212121;
+    color: $charcoal;
 
     &:hover {
         transform: scale(1.02);
@@ -265,7 +268,7 @@ $recipe-image-height: 80px;
         text-transform: uppercase;
 
         strong {
-            color: orange;
+            color: $orange;
         }
     }
 
@@ -289,7 +292,7 @@ $recipe-image-height: 80px;
     &__title {
         margin: 0;
         background-color: $nectarine;
-        color: #212121;
+        color: $charcoal;
         padding: 1.25rem;
         border-bottom: 1px solid $medium-grey;
     }
@@ -300,7 +303,7 @@ $recipe-image-height: 80px;
     }
 
     &__description {
-        color: #666;
+        color: $dark-grey;
         font-size: 1.2rem;
         padding-bottom: 1rem;
         border-bottom: 1px solid $medium-grey;
@@ -317,7 +320,7 @@ $recipe-image-height: 80px;
     }
 
     &__subtitle {
-        color: #666;
+        color: $dark-grey;
         font-size: 0.8rem;
         text-transform: uppercase;
     }
@@ -329,7 +332,7 @@ $recipe-image-height: 80px;
 }
 
 .modal {
-    background-color: white;
+    background-color: $white;
     padding: 1rem;
     border-radius: 0.5rem;
 

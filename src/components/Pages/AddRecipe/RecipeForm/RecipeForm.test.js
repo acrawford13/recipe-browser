@@ -3,7 +3,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 
 import { RecipeForm } from './RecipeForm';
-import MultiInput from '../../components/UI/Forms/MultiInput/MultiInput';
+import MultiInput from '../../../UI/Forms/MultiInput/MultiInput';
 
 configure({ adapter: new Adapter() });
 

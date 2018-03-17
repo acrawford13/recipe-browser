@@ -3,11 +3,11 @@ import update from 'immutability-helper';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
-import withErrorHandler from '../../hoc/withErrorHandler';
-import MultiInput from '../../components/UI/Forms/MultiInput/MultiInput';
-import Input from '../../components/UI/Forms/Input/Input';
-import Modal from '../../components/UI/Modal/Modal';
-import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../../../hoc/withErrorHandler';
+import MultiInput from '../../../UI/Forms/MultiInput/MultiInput';
+import Input from '../../../UI/Forms/Input/Input';
+import Modal from '../../../UI/Modal/Modal';
+import Spinner from '../../../UI/Spinner/Spinner';
 
 import { checkValidity, validateForm, formatDataSubmission } from './RecipeFormUtilities';
 

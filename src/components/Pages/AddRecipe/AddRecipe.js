@@ -1,5 +1,5 @@
 import React from 'react';
-import RecipeForm from '../../../containers/RecipeForm/RecipeForm';
+import RecipeForm from './RecipeForm/RecipeForm';
 import NavigationBar from '../../Navigation/NavigationBar/NavigationBar';
 
 const addRecipe = (props) => {

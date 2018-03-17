@@ -10,7 +10,7 @@ const searchBar = (props) => (
                 className="search-container__input"
                 type="text"
                 placeholder="Search for an ingredient" />
-            <Link to="/recipes/add" className="button alert">Add recipe</Link>
+            <Link to="/recipes/add" className="button button--addRecipe">Add recipe</Link>
         </div>
     </div>
 );

@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
+import withErrorHandler from './hoc/withErrorHandler';
 import Layout from './components/Layout/Layout';
 import RecipeBrowser from './components/Pages/RecipeBrowser/RecipeBrowser';
 import RecipeView from './components/Pages/RecipeView/RecipeView';
-import AddRecipe from './containers/AddRecipe/AddRecipe';
+import AddRecipe from './components/Pages/AddRecipe/AddRecipe';
 
 class App extends Component {
     state = {
@@ -61,4 +62,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default withErrorHandler(App, axios);

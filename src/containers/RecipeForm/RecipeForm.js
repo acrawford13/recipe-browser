@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import update from 'immutability-helper';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
+import withErrorHandler from '../../hoc/withErrorHandler';
 import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
 import Input from '../../components/UI/Forms/Input/Input';
+import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
 
-import { checkValidity, removeEmptyRows, validateForm, formatDataSubmission } from './RecipeFormUtilities';
+import { checkValidity, validateForm, formatDataSubmission } from './RecipeFormUtilities';
 
 class recipeForm extends Component {
     state = {
+        success: false,
         loading: false,
         form: {
             isValid: false,
@@ -214,22 +217,23 @@ class recipeForm extends Component {
         e.preventDefault();
 
         const validatedForm = validateForm(this.state.form);
-        this.setState({form: validatedForm});
         
         // if form is not valid, stop form submission
         if(!validatedForm.isValid) {
+            this.setState({form: validatedForm});
             return;
+        } else {
+            this.setState({form: validatedForm, loading: true});
         }
 
         const formattedData = formatDataSubmission(validatedForm);
 
         axios.post('https://private-anon-bd952d998b-reactnativemockapi.apiary-mock.com/recipes', formattedData)
             .then(res => {
-                console.log(res.data);
-                this.props.history.push('/');
+                this.setState({success: res.data.success, loading: false});
             })
             .catch(err => {
-                console.log(err);
+                this.setState({loading: false, success: false});
             });
     }
 
@@ -267,14 +271,17 @@ class recipeForm extends Component {
         let form = this.state.loading ? <Spinner /> : formData;
 
         return (
-            <form className="form" onSubmit={(e) => {this.handleSubmission(e)}}>
-                <h3 className="form__title">Add a new recipe</h3>
-                <div className="form__content">
-                    {form}
-                    <input type="submit" value="Submit" />
-                </div>
-            </form>)
+            <Fragment>
+                <Modal clicked={()=>{this.props.history.push('/')}} show={this.state.success}>Recipe added successfully</Modal>
+                <form className="form" onSubmit={(e) => {this.handleSubmission(e)}}>
+                    <h3 className="form__title">Add a new recipe</h3>
+                    <div className="form__content">
+                        {form}
+                        <input type="submit" value="Submit" />
+                    </div>
+                </form>
+            </Fragment>)
     }
 }
  
-export default withRouter(recipeForm);
+export default withRouter(withErrorHandler(recipeForm, axios));

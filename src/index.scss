@@ -346,3 +346,21 @@ $recipe-image-height: 80px;
     text-align: center;
     padding: 2.5rem;
 }
+
+.modal {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    &__wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

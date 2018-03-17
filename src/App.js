@@ -12,7 +12,6 @@ class App extends Component {
     state = {
         loading: true,
         error: false,
-        searchTerm: '',
         recipes: [],
     }
 
@@ -32,10 +31,6 @@ class App extends Component {
             });
     }
 
-    onSearchTermUpdated = (e) => {
-        this.setState({searchTerm: e.target.value});
-    }
-
     render() {
         return (
             <BrowserRouter>
@@ -50,8 +45,6 @@ class App extends Component {
                         <RecipeBrowser
                             loading={this.state.loading}
                             recipes={this.state.recipes}
-                            searchTerm={this.state.searchTerm}
-                            onSearchTermUpdated={this.onSearchTermUpdated}
                             />
                     )} />
                     <Redirect to="/" />

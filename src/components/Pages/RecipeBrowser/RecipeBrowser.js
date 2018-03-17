@@ -1,42 +1,51 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 import RecipeList from './RecipeList/RecipeList';
 import SearchBar from '../../Navigation/SearchBar/SearchBar';
 import Spinner from '../../UI/Spinner/Spinner';
 
-const recipeBrowser = (props) => {
-    const filteredRecipes = props.recipes
-        .filter(recipe => {
-            return recipe.ingredients
-                .filter(ingredient => {
-                    return ingredient.name.toLowerCase().indexOf(props.searchTerm.toLowerCase()) !== -1;
-                }).length > 0
-            });
+class recipeBrowser extends Component {
+    state = {
+        searchTerm: '',
+    }
 
-    let searchMessage = '';
+    onSearchTermUpdated = (e) => {
+        this.setState({searchTerm: e.target.value});
+    }
 
-    if (props.searchTerm) {
-        if (filteredRecipes.length > 0) {
-            searchMessage = <p className="search-message">Recipes with ingredients containing <strong>'{props.searchTerm}'</strong></p>;
-        } else {
-            searchMessage = <p className="search-message search-message--no-results">No results found</p>;            
+    render () {   
+        const filteredRecipes = this.props.recipes
+            .filter(recipe => {
+                return recipe.ingredients
+                    .filter(ingredient => {
+                        return ingredient.name.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) !== -1;
+                    }).length > 0
+                });
+
+        let searchMessage = '';
+        
+        if (this.state.searchTerm && filteredRecipes.length > 0) {
+            searchMessage = <p className="search-message">Recipes with ingredients containing <strong>'{this.state.searchTerm}'</strong></p>;
+        } else if (filteredRecipes.length === 0) {
+            searchMessage = <p className="search-message search-message--no-results">No recipes found</p>;            
         }
-    }
+        
+        let recipeBrowser = <Spinner />;
 
-    let recipeBrowser = <Spinner />;
-
-    if(!props.loading) {
-        recipeBrowser = (
-            <div>
-                <SearchBar changed={props.onSearchTermUpdated} searchTerm={props.searchTerm} />
-                <div className="main-container">
-                    {searchMessage}
-                    <RecipeList recipes={filteredRecipes} />
+        if(!this.props.loading) {
+            recipeBrowser = (
+                <div>
+                    <SearchBar changed={this.onSearchTermUpdated} searchTerm={this.state.searchTerm} />
+                    <div className="main-container">
+                        {searchMessage}
+                        {filteredRecipes ? <RecipeList recipes={filteredRecipes} /> : ''}
+                    </div>
                 </div>
-            </div>);
-    }
+            );
+        }
 
-    return recipeBrowser;
+        return recipeBrowser;
+    }
 }
  
 export default recipeBrowser;

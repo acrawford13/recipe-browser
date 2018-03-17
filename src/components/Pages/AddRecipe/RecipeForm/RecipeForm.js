@@ -9,7 +9,7 @@ import Input from '../../../UI/Forms/Input/Input';
 import Modal from '../../../UI/Modal/Modal';
 import Spinner from '../../../UI/Spinner/Spinner';
 
-import { checkValidity, validateForm, formatDataSubmission } from './RecipeFormUtilities';
+import { checkValidity, createNewRow, validateForm, formatDataSubmission } from './RecipeFormUtilities';
 
 export class RecipeForm extends Component {
     state = {
@@ -100,27 +100,32 @@ export class RecipeForm extends Component {
 
     constructor(props) {
         super(props);
-        const formData = {...this.state.form.fields};
-        
-        for(let fieldId in formData){
-            if(formData[fieldId].fieldType && formData[fieldId].fieldType === 'multi'){
-                formData[fieldId] = update(formData[fieldId], {
-                    data: {[fieldId + new Date().getTime()] : {$set: {...formData[fieldId].defaultFields}}}
+        const formFields = {...this.state.form.fields};
+
+        // on initialisation of multi fields,
+        // create a new row in the data object based on default fields
+        for(let key in formFields){
+            if(formFields[key].fieldType && formFields[key].fieldType === 'multi'){
+                formFields[key] = update(formFields[key], {
+                    data: {$set: createNewRow(formFields[key], key)}
                 })
             }
         }
-        this.state = update(this.state, {form: {fields: {$set: formData}}});
+
+        this.state = update(this.state, {form: {fields: {$set: formFields}}});
     }
 
     onChangeHandler = (e, fieldId) => {
         let newValue;
         if(e.target.files && e.target.files.length > 0){
+            // if file field, store file information to the data object
             newValue = {
                 data: {
                     uri: 'xxxxxxxx',
                     type: e.target.files[0].type,
                 },
-                value: e.target.value
+                value: e.target.value,
+                error: checkValidity(e.target.value, this.state.form.fields[fieldId].validation)
             }
         } else {
             newValue = {
@@ -132,9 +137,7 @@ export class RecipeForm extends Component {
         this.setState({
             form: update(this.state.form, {
                 fields: {
-                    [fieldId]: {
-                        $merge: newValue
-                    }
+                    [fieldId]: {$merge: newValue}
                 }
             })
         })
@@ -143,25 +146,13 @@ export class RecipeForm extends Component {
     addInputHandler = (e, fieldId) => {
         e.preventDefault();
 
-        const section = this.state.form.fields[fieldId];
-        const defaultValues = {};
-
-        for (let key in section.defaultFields){
-            defaultValues[key] = update(section.defaultFields[key], {value: {$set: ''}});
-        }
+        const newRow = createNewRow(this.state.form.fields[fieldId], fieldId);
 
         this.setState({
             form: update(this.state.form, {
                 fields: {
                     [fieldId]: {
-                        data: {
-                            $merge: {
-                                [fieldId + new Date().getTime()]: section.defaultFields,
-                            }
-                        },
-                        defaultFields: {
-                            $set: defaultValues
-                        },
+                        data: {$merge: newRow},
                         error: {
                             $set: checkValidity(
                                 this.state.form.fields[fieldId].data,
@@ -176,18 +167,16 @@ export class RecipeForm extends Component {
 
     removeInputHandler = (e, dataId, groupId) =>{
         e.preventDefault();
-        const section = this.state.form.fields[groupId];
-        const updatedData = section.data;
-        delete updatedData[dataId];
+
+        let updatedData = this.state.form.fields[groupId].data;
+        updatedData = update(updatedData, {$unset: [dataId]});
 
         this.setState({
             form: update(this.state.form, {
                 fields: {
                     [groupId]: {
-                        data: {
-                            $set: updatedData
-                        },
-                        error: {$set: checkValidity(this.state.form.fields[groupId].data, this.state.form.fields[groupId].validation)}
+                        data: {$set: updatedData},
+                        error: {$set: checkValidity(updatedData, this.state.form.fields[groupId].validation)}
                     }
                 }
             })
@@ -199,13 +188,7 @@ export class RecipeForm extends Component {
             form: update(this.state.form, {
                 fields: {
                     [groupId]: {
-                        data: {
-                            [dataId]: {
-                                [fieldId]: {
-                                    value: {$set: e.target.value}
-                                }
-                            }
-                        },
+                        data: {[dataId]: {[fieldId]: {value: {$set: e.target.value}}}},
                         error: {$set: checkValidity(this.state.form.fields[groupId].data, this.state.form.fields[groupId].validation)}
                     }
                 }

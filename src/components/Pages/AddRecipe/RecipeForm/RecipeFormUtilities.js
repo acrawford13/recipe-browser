@@ -1,5 +1,9 @@
 import update from 'immutability-helper';
 
+export const createNewRow = (field, fieldId) => {
+    return {[fieldId + new Date().getTime()]: {...field.defaultFields}};
+}
+
 export const checkValidity = (value, rules) => {
     let isValid = true;
     let error = null;

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Input from '../../Input/Input';
+import Input from '../Input/Input';
 
 
-const multiFieldFormSection = (props) => {
+const MultiInput = (props) => {
     const error = props.error ? <p className="multi-input__error">{props.error}</p> : '';
     // map existing data to array
     const existingData = [];
@@ -47,4 +47,4 @@ const multiFieldFormSection = (props) => {
     )
 }
  
-export default multiFieldFormSection;
+export default MultiInput;

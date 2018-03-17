@@ -4,7 +4,7 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 
 import withErrorHandler from '../../hoc/withErrorHandler';
-import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
+import MultiInput from '../../components/UI/Forms/MultiInput/MultiInput';
 import Input from '../../components/UI/Forms/Input/Input';
 import Modal from '../../components/UI/Modal/Modal';
 import Spinner from '../../components/UI/Spinner/Spinner';
@@ -255,7 +255,7 @@ class recipeForm extends Component {
         formData = formData.map(field => {
             if (field.fieldType && field.fieldType === 'multi') {
                 return (<div key={field.id} className="form-row">
-                    <MultiFieldFormSection
+                    <MultiInput
                             key={field.id}
                             fields={this.state.form.fields[field.id]}
                             {...field}

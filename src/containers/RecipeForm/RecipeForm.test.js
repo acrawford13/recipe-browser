@@ -3,7 +3,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 
 import RecipeForm from './RecipeForm';
-import MultiFieldFormSection from '../../components/UI/Forms/Sections/MultiFieldFormSection/MultiFieldFormSection';
+import MultiInput from '../../components/UI/Forms/Sections/MultiInput/MultiInput';
 
 configure({ adapter: new Adapter() });
 
@@ -70,7 +70,7 @@ describe('<RecipeForm /> multi input behaviour', () => {
         wrapper.setState(data);
         groupName = 'group1';
         prevDataLength = Object.keys(data.form.fields.group1.data).length;
-        group = wrapper.find(MultiFieldFormSection).filterWhere(n => n.key() === groupName);
+        group = wrapper.find(MultiInput).filterWhere(n => n.key() === groupName);
     });
 
     it('should populate the data on load', () => {

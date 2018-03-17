@@ -2,11 +2,11 @@ import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 
-import MultiFieldFormSection from './MultiFieldFormSection';
+import MultiInput from './MultiInput';
 
 configure({ adapter: new Adapter() });
 
-describe('<MultiFieldFormSection />', () => {
+describe('<MultiInput />', () => {
     it('should render the correct number of rows', () => {
         let fields = {
             defaultFields: {
@@ -23,7 +23,7 @@ describe('<MultiFieldFormSection />', () => {
                 }
             },
         }
-        let wrapper = shallow(<MultiFieldFormSection fields={fields} />);
+        let wrapper = shallow(<MultiInput fields={fields} />);
         expect(wrapper.find('div.multiInput-row')).toHaveLength(Object.keys(fields.data).length);
     })
 })

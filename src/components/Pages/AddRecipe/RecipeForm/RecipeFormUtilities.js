@@ -25,31 +25,27 @@ export const checkValidity = (value, rules) => {
     return error;
 }
 
-export const dataToArray = (data) => {
-    let isEmpty = true;
-    const dataArray = Object.keys(data).map(
-        dataId => Object.keys(data[dataId]).map(
-            fieldId => {
-                if(isEmpty && data[dataId][fieldId].value) {
-                    isEmpty = false;
-                }
-                return data[dataId][fieldId].value
-            }
-        )
-    );
-    return isEmpty ? '' : dataArray;
-}
-
-export const dataToObject = (data) => {
+export const processMultiData = (data) => {
     let isEmpty = true;
     const dataObject = Object.keys(data).map(
         dataId => {
-            const value = {};
-            for (let key in data[dataId]){
-                if(isEmpty && data[dataId][key].value){
-                    isEmpty = false;
+            let value;
+            if (Object.keys(data[dataId]).length > 1){
+                // if the group contains multiple fields,
+                // return the values as an object
+                value = {};
+                for (let key in data[dataId]){
+                    if(isEmpty && data[dataId][key].value){
+                        isEmpty = false;
+                    }
+                    value[key] = data[dataId][key].value;
                 }
-                value[key] = data[dataId][key].value;
+            } else {
+                // otherwise return the single value as a string
+                for (let key in data[dataId]){
+                    isEmpty = false;
+                    value = data[dataId][key].value;
+                }
             }
             return value;
         }
@@ -105,14 +101,7 @@ export const formatDataSubmission = (form) => {
         let field = form.fields[fieldId];
         let updatedField;
         if (field.fieldType === 'multi') {
-            let formFields = Object.keys(field.defaultFields);
-            if(formFields.length === 1){
-                // if there is only one default field, submit data as an array
-                updatedField = dataToArray(field.data);
-            } else {
-                // else submit data as an object with field names
-                updatedField = dataToObject(field.data);
-            }
+            updatedField = processMultiData(field.data);
         } else if (field.type === 'file') {
             updatedField = field.data ? field.data : {};
         } else {
